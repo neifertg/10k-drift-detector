@@ -16,7 +16,7 @@ The rules are narrow on purpose. "Material weakness" in a sentence about what mi
 
 For each company it takes the three most recent Form 10-Ks on EDGAR and compares each filing with the previous one. Fiscal year-ends are whatever the filing says. Costco, Walmart, Microsoft, Apple, Visa, and Johnson & Johnson do not share a December 31 year-end, and they are not forced onto one.
 
-Passages are split on bold headings where the filing has them, and on the filing's own paragraphs otherwise. Two passages are treated as the same passage when content-token overlap is at least 0.45. Overlap from 0.30 up to 0.45 is left unclassified. Below 0.30 the passage is added or removed. Function words are ignored in the overlap. Negations are not, so dropping "not" is kept.
+Passages are split on bold headings where the filing has them, and on the filing's own paragraphs otherwise. Passages are paired one-to-one, greedily, when content-token overlap is at least 0.45. A leftover whose closest passage is still at or above 0.45 was not paired because that closest passage was already matched; it is labeled already paired, and it is not called added or removed. Overlap from 0.30 up to, but not including, 0.45 is left unclassified. Below 0.30 the passage is added or removed. Function words are ignored in the overlap. Negations are not, so dropping "not" is kept.
 
 A matched pair is called a date-only edit when every added or removed token is a four-digit year, a month name, or an integer from 1 to 31 sitting within three tokens of a month name. Those edits are counted and not listed. Other number changes are listed.
 
@@ -45,7 +45,7 @@ The HTML report is `docs/index.html`. Open it locally, or publish the `docs/` fo
 
 ## Sample
 
-The report in `docs/` was generated from EDGAR on 2026-11-13 01:45 UTC. Two excerpts:
+The report in `docs/` was generated from EDGAR on 2026-11-13 02:16 UTC. Two excerpts:
 
 JPMorgan Chase, Item 9A, 2024-12-31 and 2025-12-31. The phrase "material weakness" is in both years. The sentence is the same aside from dates and numbers, and the rules call it hypothetical, not an identification.
 
@@ -67,7 +67,8 @@ Visa's latest period ends 2026-09-30 and Mastercard's ends 2025-12-31, 273 days 
 - Item 8, exhibits, the 10-K/A, 10-Q, and 8-K are not read. Amendments are named and left out of the diff.
 - Absence means the phrase was not in the extracted section. It does not mean the company has no such risk. A peer "not aligned" result is the same kind of statement.
 - If a section cannot be bounded, or the two years are not split the same way, passage adds and drops are withheld.
-- Matching is greedy and one-to-one. A full rewrite can show up as a removal plus an addition, or as unclassified.
+- Matching is greedy and one-to-one. A leftover can overlap another passage at 0.45 or more when that passage was already paired. That leftover is labeled already paired. A full rewrite can show up as a removal plus an addition, or as unclassified when the overlap is from 0.30 up to, but not including, 0.45.
+- This is a wording comparison of public filings. It is not investment advice.
 - An integer from 1 to 31 next to a month name is treated as a date. A percentage that happens to be in that range and sits next to a month name can be treated as a date too.
 - Bold-heading detection follows the filing's HTML. A risk written as ordinary paragraphs is compared as paragraphs.
 - The auditor's opinion is taken only from words inside Item 9A.

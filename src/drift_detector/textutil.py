@@ -30,10 +30,12 @@ MONTHS = {
     "august", "september", "october", "november", "december",
 }
 
-# A matched pair at or above this content-token overlap is the same passage.
+# One-to-one matching pairs a passage at or above this content-token overlap.
+# A leftover whose closest passage is still at or above this line was not
+# paired because that closest passage was already used.
 ALIGN_THRESHOLD = 0.45
 # Below this, an unmatched passage is treated as added or removed.
-# Between the two thresholds the passage is left unclassified.
+# From here up to ALIGN_THRESHOLD, an unmatched passage is unclassified.
 UNCERTAIN_THRESHOLD = 0.30
 # Peer "no aligned passage" uses the same uncertain floor.
 # A closest passage is quoted only when overlap is at least this high;

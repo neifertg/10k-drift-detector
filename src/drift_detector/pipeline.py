@@ -182,7 +182,7 @@ def _rows_for(matches, prior: FilingRecord, current: FilingRecord, item: str) ->
     prior_section = prior.sections[item]
     current_section = current.sections[item]
     for match in matches:
-        if match.kind not in {"added", "removed", "changed", "uncertain"}:
+        if match.kind not in {"added", "removed", "changed", "uncertain", "already_paired"}:
             continue
         prior_text = match.prior.text if match.prior else None
         current_text = match.current.text if match.current else None
@@ -200,7 +200,7 @@ def _rows_for(matches, prior: FilingRecord, current: FilingRecord, item: str) ->
             closest_section = prior_section
         elif match.kind == "removed":
             closest_section = current_section
-        elif match.kind == "uncertain":
+        elif match.kind in {"uncertain", "already_paired"}:
             closest_section = current_section if match.prior and not match.current else prior_section
         if closest_text and not _quote_ok(closest_text, closest_section):
             closest_text = None
@@ -312,7 +312,8 @@ def _risk_line(cmp: ItemComparison) -> str:
         f"Item 1A ({cmp.prior_report_date} to {cmp.current_report_date}): "
         f"{counts.get('added', 0)} added, {counts.get('removed', 0)} removed, "
         f"{counts.get('changed', 0)} wording changes, {counts.get('cosmetic', 0)} date-only, "
-        f"{counts.get('uncertain', 0)} unclassified."
+        f"{counts.get('uncertain', 0)} unclassified, "
+        f"{counts.get('already_paired', 0)} already paired."
     )
 
 

@@ -95,6 +95,36 @@ def _focus(prior: str | None, current: str | None) -> tuple[str, str, bool]:
     return left, right, False
 
 
+def _kind_label(kind: str) -> str:
+    return {
+        "already_paired": "already paired",
+        "uncertain": "unclassified",
+        "changed": "changed",
+        "added": "added",
+        "removed": "removed",
+    }.get(kind, kind)
+
+
+def _closest_explanation(similarity: float) -> str:
+    """Say why a leftover passage was not called added, removed, or changed.
+
+    A score at or above the alignment threshold is still a leftover when the
+    closest passage was already used in a one-to-one pair.
+    """
+    if similarity >= ALIGN_THRESHOLD:
+        return (
+            f"Closest passage in the other year overlaps at {similarity:.2f}, "
+            f"which is at or above {ALIGN_THRESHOLD:.2f}. "
+            "That passage was already paired under one-to-one matching, "
+            "so this leftover is not called added, removed, or changed."
+        )
+    return (
+        f"Closest passage in the other year overlaps at {similarity:.2f}, "
+        f"which is below {ALIGN_THRESHOLD:.2f} and at or above {UNCERTAIN_THRESHOLD:.2f}, "
+        "so this is not called added, removed, or changed."
+    )
+
+
 def _side_by_side(row: AlignedRow) -> str:
     left_text, right_text, omitted = _focus(row.prior_text, row.current_text)
     if row.kind == "changed" and left_text and right_text:
@@ -124,18 +154,16 @@ def _side_by_side(row: AlignedRow) -> str:
     if row.current_url:
         right_link = f'<p class="src"><a href="{e(row.current_url)}">Passage in the {e(row.current_report_date)} filing</a></p>'
     extra = ""
-    if row.kind == "uncertain" and row.closest_text:
-        shown, cut = excerpt(row.closest_text, 400)
-        extra = (
-            f'<p class="src">Closest passage in the other year overlaps at {row.closest_similarity:.2f}, '
-            f"which is below {ALIGN_THRESHOLD:.2f}, so this is not called added, removed, or changed.</p>"
-            f"<blockquote><p>{e(shown)}</p></blockquote>"
-        )
-        if cut:
-            extra += '<p class="src">Closest-passage quote truncated to an exact prefix.</p>'
+    if row.kind in {"uncertain", "already_paired"} and row.closest_similarity is not None:
+        extra = f"<p class=\"src\">{e(_closest_explanation(row.closest_similarity))}</p>"
+        if row.closest_text:
+            shown, cut = excerpt(row.closest_text, 400)
+            extra += f"<blockquote><p>{e(shown)}</p></blockquote>"
+            if cut:
+                extra += '<p class="src">Closest-passage quote truncated to an exact prefix.</p>'
     label = row.label or "Passage"
     return (
-        f"<h4>{e(row.kind)} — {e(label)}</h4>"
+        f"<h4>{e(_kind_label(row.kind))} — {e(label)}</h4>"
         f"{note}{sim}"
         '<div class="pair">'
         f'<div class="col"><p class="tag">Period ended {e(row.prior_report_date or "—")}</p>{left_html}{left_link}</div>'
@@ -223,7 +251,9 @@ def _comparison_section(cmp, company: CompanyResult) -> str:
         f"<p>{counts.get('added', 0)} added, {counts.get('removed', 0)} removed, "
         f"{counts.get('changed', 0)} wording changes, {counts.get('cosmetic', 0)} date-only edits, "
         f"{counts.get('unchanged', 0)} unchanged, {counts.get('uncertain', 0)} unclassified "
-        f"(overlap between {UNCERTAIN_THRESHOLD:.2f} and {ALIGN_THRESHOLD:.2f}). "
+        f"(closest overlap from {UNCERTAIN_THRESHOLD:.2f} up to, but not including, {ALIGN_THRESHOLD:.2f}), "
+        f"{counts.get('already_paired', 0)} already paired "
+        f"(closest overlap at least {ALIGN_THRESHOLD:.2f}, but that passage was already matched one-to-one). "
         "Date-only edits are not listed. A wording change means the passage matched and the edit was not only a year, a month, or a day next to a month.</p>"
     )
     flags = "\n".join(_flag_block(f, suffix) for f in cmp.flags)
@@ -233,6 +263,7 @@ def _comparison_section(cmp, company: CompanyResult) -> str:
         ("added", "Added passages"),
         ("removed", "Removed passages"),
         ("uncertain", "Unclassified passages"),
+        ("already_paired", "Already paired"),
     ):
         rows = [r for r in cmp.rows if r.kind == kind]
         if not rows:
@@ -272,7 +303,8 @@ def company_page(company: CompanyResult, generated_at: str) -> str:
         parts.append(_comparison_section(cmp, company))
     parts.append(
         f'<footer><p>Generated {e(generated_at)} by 10k-drift-detector {e(__version__)}. '
-        "Source filings are on EDGAR. This page quotes them and does not restate figures that are not in the quote.</p></footer>"
+        "Source filings are on EDGAR. This page quotes them and does not restate figures that are not in the quote. "
+        "This is a wording comparison of public filings. It is not investment advice.</p></footer>"
     )
     return _page(f"{company.display_name} 10-K drift", "\n".join(parts), 1)
 
@@ -391,7 +423,8 @@ def peer_page(peer: PeerResult, companies: dict[str, CompanyResult], generated_a
             f"<tbody>{''.join(rows)}</tbody></table>"
         )
     body.append(
-        f'<footer><p>Generated {e(generated_at)} by 10k-drift-detector {e(__version__)}.</p></footer>'
+        f'<footer><p>Generated {e(generated_at)} by 10k-drift-detector {e(__version__)}. '
+        "This is a wording comparison of public filings. It is not investment advice.</p></footer>"
     )
     return _page(f"{peer.sector} peer comparison", "\n".join(body), 1)
 
@@ -472,7 +505,7 @@ def _methodology() -> str:
     return f"""
 <h2>How a change is called</h2>
 <div class="method">
-<p>Passages are split on bold headings where the filing has them, otherwise on paragraphs. Two passages are the same passage when content-token overlap is at least {ALIGN_THRESHOLD:.2f}. Overlap from {UNCERTAIN_THRESHOLD:.2f} up to that line is left unclassified. Below {UNCERTAIN_THRESHOLD:.2f}, the passage is added or removed.</p>
+<p>Passages are split on bold headings where the filing has them, otherwise on paragraphs. Passages are paired one-to-one, greedily, when content-token overlap is at least {ALIGN_THRESHOLD:.2f}. A leftover whose closest passage is still at or above that line was not paired because the closest passage was already matched; it is labeled already paired, not added or removed. Overlap from {UNCERTAIN_THRESHOLD:.2f} up to, but not including, {ALIGN_THRESHOLD:.2f} is left unclassified. Below {UNCERTAIN_THRESHOLD:.2f}, the passage is added or removed.</p>
 <p>Content tokens drop function words and keep negations, so removing “not” is not treated as noise. A matched pair is date-only when every added or removed token is a four-digit year, a month name, or an integer from 1 to 31 sitting within three tokens of a month name. Other number changes are kept.</p>
 <p>“Material weakness” and “significant deficiency” are classified from the sentence. A sentence that says a weakness was identified is labeled assertion. A sentence that only says one may occur in the future is labeled hypothetical. The auditor’s standard sentence about assessing the risk that a material weakness exists is labeled a procedure description. None of those is reported as an identification. If the rules do not fit, the sentence is quoted and no classification is made.</p>
 <p>The auditor's opinion is taken only from words in Item 9A. A sentence that points to Item 8 is quoted as a pointer. Item 8 is not opened.</p>
@@ -483,9 +516,10 @@ def _methodology() -> str:
 <li>It does not score the company, and it does not decide whether a control is effective.</li>
 <li>It does not read Item 8, exhibits, 10-Q, 8-K, or the 10-K/A.</li>
 <li>It does not put peers on one fiscal calendar. The peer page states the period ends.</li>
-<li>Passage matching is greedy. A full rewrite can show up as a removal plus an addition.</li>
+<li>Passage matching is greedy and one-to-one. A leftover can overlap another passage at or above 0.45 when that passage was already paired. A full rewrite can show up as a removal plus an addition.</li>
 <li>An integer from 1 to 31 next to a month name is treated as a date.</li>
 <li>The optional model summary is off unless you set it, and it is never the evidence.</li>
+<li>This is a wording comparison of public filings. It is not investment advice.</li>
 </ul>
 """
 

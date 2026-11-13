@@ -48,6 +48,47 @@ def test_added_and_removed():
     assert removed.prior.text == gone
 
 
+def test_leftover_at_or_above_threshold_is_already_paired():
+    """A second passage can overlap the same partner at >= 0.45 and still be leftover.
+
+    One-to-one matching keeps the first pair. The leftover is not unclassified
+    and is not called added or removed.
+    """
+    base = (
+        "Wholesale funding markets can close to the firm during stress which limits "
+        "the ability to refinance maturing debt and meet cash obligations to clients "
+        "and depositors over several quarters."
+    )
+    variant = (
+        base
+        + " Those same funding markets also reprice the firm's outstanding bonds when "
+        "investors demand a wider credit spread."
+    )
+    assert content_overlap(base, variant) >= 0.45
+    rows = align_passages([_p(base, "Base"), _p(variant, "Variant")], [_p(base, "Base")])
+    leftover = next(row for row in rows if row.prior and row.prior.title == "Variant")
+    paired = next(row for row in rows if row.kind in {"unchanged", "changed", "cosmetic"})
+    assert paired.prior.title == "Base"
+    assert leftover.kind == "already_paired"
+    assert leftover.closest_similarity >= 0.45
+    assert leftover.kind != "uncertain"
+    assert count_kinds(rows)["already_paired"] == 1
+    assert count_kinds(rows)["removed"] == 0
+
+
+def test_leftover_between_thresholds_stays_unclassified():
+    prior = "credit collateral mortgage prepayment servicing capital liquidity wholesale"
+    current_close = "credit collateral mortgage prepayment deposit branch treasury custody"
+    current_other = "succession planning minutes director committee agenda calendar retreat"
+    overlap = content_overlap(prior, current_close)
+    assert 0.30 <= overlap < 0.45
+    rows = align_passages([_p(prior)], [_p(current_close), _p(current_other)])
+    leftover = next(row for row in rows if row.prior and row.prior.text == prior)
+    assert leftover.kind == "uncertain"
+    assert leftover.closest_similarity == overlap
+    assert "already_paired" not in {row.kind for row in rows}
+
+
 def test_low_overlap_is_not_forced_into_a_match():
     prior = "Earthquake insurance covers only a narrow set of owned facilities in California and nowhere else."
     current = "The board reviews succession planning for the chief executive at least once each fiscal year."

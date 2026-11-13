@@ -71,56 +71,53 @@ def align_passages(prior: list[Passage], current: list[Passage]) -> list[Match]:
                 kind = "changed"
             rows.append(Match(kind=kind, similarity=score, prior=left, current=right))
             continue
-        best, other = _best(left, current)
-        if best >= UNCERTAIN_THRESHOLD:
-            rows.append(
-                Match(
-                    kind="uncertain",
-                    similarity=best,
-                    prior=left,
-                    closest_similarity=best,
-                    closest=other,
-                )
-            )
-        else:
-            rows.append(
-                Match(
-                    kind="removed",
-                    similarity=best if other else None,
-                    prior=left,
-                    closest_similarity=best if other else None,
-                    closest=other,
-                )
-            )
+        rows.append(_leftover(left, current, "removed"))
     for j, right in enumerate(current):
         if j in used_current:
             continue
-        best, other = _best(right, prior)
-        if best >= UNCERTAIN_THRESHOLD:
-            rows.append(
-                Match(
-                    kind="uncertain",
-                    similarity=best,
-                    current=right,
-                    closest_similarity=best,
-                    closest=other,
-                )
-            )
-        else:
-            rows.append(
-                Match(
-                    kind="added",
-                    similarity=best if other else None,
-                    current=right,
-                    closest_similarity=best if other else None,
-                    closest=other,
-                )
-            )
+        rows.append(_leftover(right, prior, "added"))
     return rows
 
 
+def _leftover(passage: Passage, others: list[Passage], absent_kind: str) -> Match:
+    """Classify a passage that one-to-one matching did not pair.
+
+    The closest passage can still score at or above the alignment threshold
+    when that passage was already paired with something else. That leftover
+    is not added or removed, and it is not in the 0.30-to-0.45 band.
+    """
+    best, other = _best(passage, others)
+    prior = passage if absent_kind == "removed" else None
+    current = passage if absent_kind == "added" else None
+    if best >= ALIGN_THRESHOLD:
+        kind = "already_paired"
+    elif best >= UNCERTAIN_THRESHOLD:
+        kind = "uncertain"
+    else:
+        kind = absent_kind
+    return Match(
+        kind=kind,
+        similarity=best if other else None,
+        prior=prior,
+        current=current,
+        closest_similarity=best if other else None,
+        closest=other,
+    )
+
+
 def count_kinds(rows: list[Match]) -> dict[str, int]:
-    counts = {k: 0 for k in ("unchanged", "cosmetic", "changed", "added", "removed", "uncertain")}
+    counts = {
+        k: 0
+        for k in (
+            "unchanged",
+            "cosmetic",
+            "changed",
+            "added",
+            "removed",
+            "uncertain",
+            "already_paired",
+        )
+    }
     for row in rows:
         counts[row.kind] = counts.get(row.kind, 0) + 1
     return counts
