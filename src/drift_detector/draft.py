@@ -33,6 +33,7 @@ from drift_detector.textutil import (
 )
 from drift_detector.verify import (
     Evidence,
+    OverviewDraft,
     SectorBrief,
     Theme,
     _quote_key,
@@ -103,6 +104,7 @@ def draft_briefs(
     effort = os.environ.get("ANTHROPIC_EFFORT", "medium").strip()
     if effort.lower() in {"off", "none", "-"}:
         effort = ""
+    out_dir.mkdir(parents=True, exist_ok=True)
     settings = {
         "model": model,
         "api_key": api_key,
@@ -111,12 +113,14 @@ def draft_briefs(
         "version": version,
         "transport": transport,
         "input_generated_at": manifest.get("generated_at") or "",
+        "usage": [],
+        "usage_path": out_dir / "token-usage.json",
     }
     sector_system = load_prompt("sector_brief.md")
     written: list[tuple[str, SectorBrief, dict]] = []
     for sector, _members, packet in packets:
         logger.info("Drafting %s (%s characters of packet)", sector, len(json.dumps(packet)))
-        payload, brief = _draft_sector(sector, packet, companies, sector_system, settings)
+        payload, brief = _draft_sector(sector, packet, companies, sector_system, settings, label=sector)
         written.append((sector, brief, payload))
     allowed = set()
     for _sector, brief, _payload in written:
@@ -323,13 +327,15 @@ def _latest(company: CompanyResult, item: str) -> ItemComparison | None:
     return max(pairs, key=lambda comparison: comparison.current_report_date)
 
 
-def _draft_sector(sector, packet, companies, system, settings):
+def _draft_sector(sector, packet, companies, system, settings, *, label: str):
     user = (
         f"Draft the sector brief for {sector}. "
         "The packet is the only source you may quote.\n\n"
         + json.dumps(packet, ensure_ascii=False, indent=2)
     )
-    payload = _complete(system, user, companies, settings, kind="sector", sector=sector, allowed_quotes=None)
+    payload = _complete(
+        system, user, companies, settings, kind="sector", sector=sector, allowed_quotes=None, label=label
+    )
     brief, errors = validate_document(payload, companies, kind="sector", sector=sector)
     if errors or not isinstance(brief, SectorBrief):
         raise DraftError("Sector draft passed the request loop but failed a final check: " + "; ".join(errors))
@@ -351,11 +357,15 @@ def _draft_overview(sector_documents, companies, allowed, settings):
         kind="overview",
         sector=None,
         allowed_quotes=allowed,
+        label="overview",
     )
-    return _overview_document(payload, settings)
+    parsed, errors = validate_document(payload, companies, kind="overview", allowed_quotes=allowed)
+    if errors or not isinstance(parsed, OverviewDraft):
+        raise DraftError("Overview draft passed the request loop but failed a final check: " + "; ".join(errors))
+    return _overview_document(parsed, settings)
 
 
-def _complete(system, user, companies, settings, *, kind, sector, allowed_quotes) -> dict:
+def _complete(system, user, companies, settings, *, kind, sector, allowed_quotes, label: str) -> dict:
     prompt = user
     last_errors: list[str] = []
     for attempt in (1, 2):
@@ -369,6 +379,7 @@ def _complete(system, user, companies, settings, *, kind, sector, allowed_quotes
             version=settings["version"],
             transport=settings["transport"],
         )
+        _record_usage(settings, response, label, attempt)
         try:
             payload = parse_json_object(response_text(response))
         except DraftError:
@@ -505,37 +516,43 @@ def _sector_document(brief: SectorBrief, settings: dict) -> dict:
     }
 
 
-def _overview_document(payload: dict, settings: dict) -> dict:
-    # Re-shape from the model object. validate_document already accepted it;
-    # copy the fields the verifier reads and record which model ran.
-    themes = []
-    for theme in payload.get("themes") or []:
-        themes.append(
-            {
-                "title": " ".join(str(theme.get("title") or "").split()),
-                "what_changed": str(theme.get("what_changed") or "").strip(),
-                "audit_consideration": str(theme.get("audit_consideration") or "").strip(),
-                "evidence": [
-                    {
-                        "ticker": item.get("ticker"),
-                        "accession": item.get("accession"),
-                        "item": item.get("item"),
-                        "report_date": item.get("report_date"),
-                        "change": item.get("change"),
-                        "quote": str(item.get("quote") or "").strip(),
-                    }
-                    for item in theme.get("evidence") or []
-                ],
-            }
-        )
+def _overview_document(draft: OverviewDraft, settings: dict) -> dict:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "overview",
         "model": settings["model"],
         "prompt_file": "overview_brief.md",
         "input_generated_at": settings["input_generated_at"],
-        "themes": themes,
+        "themes": [_theme_dict(theme) for theme in draft.themes],
+        "sectors": [
+            {"sector": sector, "takeaways": [_theme_dict(theme) for theme in themes]}
+            for sector, themes in draft.takeaways.items()
+        ],
     }
+
+
+def _record_usage(settings: dict, response: dict, label: str, attempt: int) -> None:
+    usage = response.get("usage") if isinstance(response, dict) else None
+    row = {
+        "label": label,
+        "attempt": attempt,
+        "model": settings["model"],
+        "input_tokens": None,
+        "output_tokens": None,
+    }
+    if isinstance(usage, dict):
+        row["input_tokens"] = usage.get("input_tokens")
+        row["output_tokens"] = usage.get("output_tokens")
+        for key in ("cache_read_input_tokens", "cache_creation_input_tokens"):
+            if key in usage:
+                row[key] = usage[key]
+    settings["usage"].append(row)
+    path = settings.get("usage_path")
+    if path is not None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps({"model": settings["model"], "requests": settings["usage"]}, indent=2) + "\n"
+        )
 
 
 def _public_sector(payload: dict) -> dict:

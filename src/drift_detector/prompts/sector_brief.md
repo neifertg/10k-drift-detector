@@ -15,15 +15,16 @@ Skip, and do not make a theme out of:
 
 Divergence:
 - Exactly two sentences, in the field divergence.text.
-- Say what one company added or expanded that the other did not, or say that the latest changes do not support a difference, if that is what the passages show.
+- Say what one company added or expanded that the other did not, or say that the latest changes do not support a difference, if that is what the passages show. Name a company only when the evidence on that same item quotes it.
 - divergence.evidence has one to four quotes. When both companies have passage text in the packet, include at least one quote from each.
 
 Themes:
 - At most four. Zero is acceptable when the passages do not support an emerging or growing risk. Do not invent one to fill the page.
 - title: a short plain name, no slogan.
-- what_changed: exactly two sentences. Plain English. Describe what the filing text added or expanded. Name the company. Do not invent a count, a percentage, a dollar amount, or a date that is not in a quote you include.
-- audit_consideration: exactly one sentence.
+- what_changed: exactly two sentences. Plain English. Describe what the filing text added or expanded. Name a company only when the evidence on that same item quotes it. Do not invent a count, a percentage, a dollar amount, or a date that is not in a quote you include.
+- audit_consideration: exactly one sentence. Name a company only when the evidence on that same item quotes it.
 - evidence: one to four quotes that support those sentences.
+- Do not write the words unclassified, already_paired, or overlap in the sentences a person will read. The change field is a label for the checker. In the sentences, say that the later filing added the language or that it rewrote the language.
 
 Every quote:
 - Copy a contiguous span from a passage "text" field or from an item_9a quote "text" field. Character for character. Keep the filing's apostrophes and hyphens. Do not add or remove words. Do not use an ellipsis.

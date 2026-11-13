@@ -10,32 +10,39 @@
 
 <div class="brief">
 <h1>Emerging risks for the audit plan</h1>
-<p>Year-over-year changes in Item 1A (Risk Factors) and Item 9A (Controls and Procedures) for the six peer pairs. This page is the short list. Each company page is the passage-level evidence, behind the company name.</p>
+<p>Year-over-year changes in Item 1A (Risk Factors) and Item 9A (Controls and Procedures) for the six peer pairs. The themes are the cross-sector risks. Under Sectors, each pair has the one or two changes to consider for that audit plan. Each company page is the passage-level evidence.</p>
 <p>A theme is a reading of what the filings added or expanded. It is shown only when every supporting quote is in the stored extract it cites. It is not a risk rating, not a conclusion that a control failed, and not investment advice.</p>
 <p class="src">Filing extracts retrieved 2026-11-13 03:32 UTC from SEC EDGAR. Three latest 10-Ks per company where EDGAR has them. 10-K/A amendments are named and not diffed.</p>
 <section class="notice"><h2>Briefs not yet generated</h2><p>The overview and the sector pages will list emerging or growing risks here after drafts are written from the extracted changes and every quote has been checked against the stored filing extract. Nothing on this page is filled in ahead of that check.</p><p class="src">From a checkout: <code>python -m drift_detector draft-briefs --input briefs/input --out briefs/drafts</code>, then <code>python -m drift_detector render --input briefs/input --drafts briefs/drafts --out docs</code>. The environment variable is ANTHROPIC_API_KEY. The model defaults to claude-sonnet-5-5.</p></section>
-<h2>Sectors</h2>
+<h2 id="sectors">Sectors</h2>
 <h3><a href="peers/banking.html">Banking</a></h3>
 <p><a href="company/jpm.html">JPMorgan Chase &amp; Co.</a> and <a href="company/bac.html">Bank of America Corporation</a>.</p>
-<p>Both latest 10-Ks have a period end of 2025-12-31. Each column is that company&#x27;s own prior-year change. JPMorgan Chase &amp; Co. is the change from 2024-12-31 to 2025-12-31. Bank of America Corporation is the change from 2024-12-31 to 2025-12-31.</p>
+<p class="src"><a href="peers/banking.html">Sector brief</a>.</p>
 <h3><a href="peers/payments.html">Payments</a></h3>
 <p><a href="company/v.html">Visa Inc.</a> and <a href="company/ma.html">Mastercard Incorporated</a>.</p>
-<p>The latest period ends are 273 days apart (Visa Inc. 2026-09-30; Mastercard Incorporated 2025-12-31). This is not a same-fiscal-period comparison. Visa Inc. is the change from 2025-09-30 to 2026-09-30. Mastercard Incorporated is the change from 2024-12-31 to 2025-12-31.</p>
+<p class="src"><a href="peers/payments.html">Sector brief</a>.</p>
 <h3><a href="peers/technology.html">Technology</a></h3>
 <p><a href="company/aapl.html">Apple Inc.</a> and <a href="company/msft.html">Microsoft Corporation</a>.</p>
-<p>The latest period ends are 88 days apart (Apple Inc. 2026-09-26; Microsoft Corporation 2026-06-30). They are not the same fiscal period. Apple Inc. is the change from 2025-09-27 to 2026-09-26. Microsoft Corporation is the change from 2025-06-30 to 2026-06-30.</p>
+<p class="src"><a href="peers/technology.html">Sector brief</a>.</p>
 <h3><a href="peers/retail.html">Retail</a></h3>
 <p><a href="company/wmt.html">Walmart Inc.</a> and <a href="company/cost.html">Costco Wholesale Corporation</a>.</p>
-<p>The latest period ends are 211 days apart (Walmart Inc. 2026-01-31; Costco Wholesale Corporation 2026-08-30). This is not a same-fiscal-period comparison. Walmart Inc. is the change from 2025-01-31 to 2026-01-31. Costco Wholesale Corporation is the change from 2025-08-31 to 2026-08-30.</p>
+<p class="src"><a href="peers/retail.html">Sector brief</a>.</p>
 <h3><a href="peers/healthcare.html">Healthcare</a></h3>
 <p><a href="company/unh.html">UnitedHealth Group Incorporated</a> and <a href="company/jnj.html">Johnson &amp; Johnson</a>.</p>
-<p>The latest period ends are 3 days apart (UnitedHealth Group Incorporated 2025-12-31; Johnson &amp; Johnson 2025-12-28). They are not the same fiscal period. UnitedHealth Group Incorporated is the change from 2024-12-31 to 2025-12-31. Johnson &amp; Johnson is the change from 2024-12-29 to 2025-12-28.</p>
+<p class="src"><a href="peers/healthcare.html">Sector brief</a>.</p>
 <h3><a href="peers/energy.html">Energy</a></h3>
 <p><a href="company/xom.html">Exxon Mobil Corporation</a> and <a href="company/cvx.html">Chevron Corporation</a>.</p>
-<p>Both latest 10-Ks have a period end of 2025-12-31. Each column is that company&#x27;s own prior-year change. Exxon Mobil Corporation is the change from 2024-12-31 to 2025-12-31. Chevron Corporation is the change from 2024-12-31 to 2025-12-31.</p>
+<p class="src"><a href="peers/energy.html">Sector brief</a>.</p>
 </div>
 <details><summary>How a passage is compared, and what this does not do</summary>
 
+<h2>Which periods are compared</h2>
+<p><strong>Banking.</strong> Both latest 10-Ks have a period end of 2025-12-31. Each column is that company&#x27;s own prior-year change. JPMorgan Chase &amp; Co. is the change from 2024-12-31 to 2025-12-31. Bank of America Corporation is the change from 2024-12-31 to 2025-12-31.</p>
+<p><strong>Payments.</strong> The latest period ends are 273 days apart (Visa Inc. 2026-09-30; Mastercard Incorporated 2025-12-31). This is not a same-fiscal-period comparison. Visa Inc. is the change from 2025-09-30 to 2026-09-30. Mastercard Incorporated is the change from 2024-12-31 to 2025-12-31.</p>
+<p><strong>Technology.</strong> The latest period ends are 88 days apart (Apple Inc. 2026-09-26; Microsoft Corporation 2026-06-30). They are not the same fiscal period. Apple Inc. is the change from 2025-09-27 to 2026-09-26. Microsoft Corporation is the change from 2025-06-30 to 2026-06-30.</p>
+<p><strong>Retail.</strong> The latest period ends are 211 days apart (Walmart Inc. 2026-01-31; Costco Wholesale Corporation 2026-08-30). This is not a same-fiscal-period comparison. Walmart Inc. is the change from 2025-01-31 to 2026-01-31. Costco Wholesale Corporation is the change from 2025-08-31 to 2026-08-30.</p>
+<p><strong>Healthcare.</strong> The latest period ends are 3 days apart (UnitedHealth Group Incorporated 2025-12-31; Johnson &amp; Johnson 2025-12-28). They are not the same fiscal period. UnitedHealth Group Incorporated is the change from 2024-12-31 to 2025-12-31. Johnson &amp; Johnson is the change from 2024-12-29 to 2025-12-28.</p>
+<p><strong>Energy.</strong> Both latest 10-Ks have a period end of 2025-12-31. Each column is that company&#x27;s own prior-year change. Exxon Mobil Corporation is the change from 2024-12-31 to 2025-12-31. Chevron Corporation is the change from 2024-12-31 to 2025-12-31.</p>
 <h2>How a change is called</h2>
 <div class="method">
 <p>Passages are split on bold headings where the filing has them, otherwise on paragraphs. Passages are paired one-to-one, greedily, when content-token overlap is at least 0.45. A leftover whose closest passage is still at or above that line was not paired because the closest passage was already matched; it is labeled already paired, not added or removed. Overlap from 0.30 up to, but not including, 0.45 is left unclassified. Below 0.30, the passage is added or removed.</p>

@@ -33,12 +33,13 @@ Environment variables:
 | `ANTHROPIC_VERSION` | no | `2026-10-21` |
 | `ANTHROPIC_BASE_URL` | no | `https://api.anthropic.com/v1/messages` |
 
-The command sends one request per sector, then one for the overview. The prompts are `src/drift_detector/prompts/sector_brief.md` and `src/drift_detector/prompts/overview_brief.md`. The model may quote only the change text in the request. A draft that fails the quote check is not written. One retry is sent with the failure, and a second failure stops the command.
+The command sends one request per sector, then one for the overview. The prompts are `src/drift_detector/prompts/sector_brief.md` and `src/drift_detector/prompts/overview_brief.md`. The model may quote only the change text in the request. A sentence may name a company only when that same theme, takeaway, or divergence cites a quote from that company. A draft that fails the quote check is not written. One retry is sent with the failure, and a second failure stops the command.
 
 Output:
 
-- `briefs/drafts/overview.json`
+- `briefs/drafts/overview.json` — cross-sector themes and one or two takeaways per sector
 - `briefs/drafts/sectors/<sector>.json`
+- `briefs/drafts/token-usage.json` — input and output tokens for each request, written as the requests return
 
 To run against a copy of the bundle on another machine, pass that folder to `--input`. The folder is `manifest.json` plus `companies/*.json`. The script does not need `config/companies.yml` for this command.
 
@@ -55,7 +56,7 @@ PYTHONPATH=src python -m drift_detector verify-briefs --input briefs/input --dra
 PYTHONPATH=src python -m drift_detector render --input briefs/input --drafts briefs/drafts --out docs
 ```
 
-`verify-briefs` exits non-zero if any quote is missing from the cited extract, if the quote is not in a stored change for that accession, or if the draft is the wrong shape. With no JSON in `briefs/drafts/`, it exits zero and prints that there is nothing to verify.
+`verify-briefs` exits non-zero if any quote is missing from the cited extract, if the quote is not in a stored change for that accession, if a sentence names a covered company that the same item does not quote, or if the draft is the wrong shape. With no JSON in `briefs/drafts/`, it exits zero and prints that there is nothing to verify. `token-usage.json` is not a draft.
 
 `render` reads the bundle, rebuilds the peer comparison, and writes `docs/`. Verified drafts become the overview and the six sector briefs. A failed check is written as a notice, the themes are left off the page, and the command exits non-zero. Company pages are still written. They do not depend on the model.
 
@@ -72,7 +73,7 @@ PYTHONPATH=src python -m drift_detector run --config config/companies.yml --out 
 
 ## What the pages are
 
-`docs/index.html` is the overview: a few cross-sector themes, each with the companies that added or expanded it, two sentences on what changed, one audit-plan consideration, and the supporting quotes behind a disclosure. The quotes link to the filing.
+`docs/index.html` is the overview. The themes are the cross-sector risks, with overlapping artificial-intelligence items merged. Under Sectors, each pair has one or two takeaways. Each item has the companies it quotes, two sentences on what changed, one audit-plan consideration, and the supporting quotes behind a disclosure. The quotes link to the filing. Which fiscal periods are being compared is in the methodology at the bottom of that page.
 
 `docs/peers/<sector>.html` is the same shape for one pair, including where the two peers diverge. The passage-level peer comparison is under "Passage-level comparison".
 

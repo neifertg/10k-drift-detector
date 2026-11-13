@@ -10,6 +10,7 @@ not change. Any failure raises BriefVerificationError.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -19,11 +20,40 @@ from drift_detector.textutil import clean_text, passage_fragment, sentences
 
 MIN_QUOTE = 40
 MAX_QUOTE = 1200
-MAX_THEMES_OVERVIEW = 6
+MAX_THEMES_OVERVIEW = 4
+MAX_AI_THEMES = 2
 MAX_THEMES_SECTOR = 4
+MAX_TAKEAWAYS = 2
 MAX_EVIDENCE = 4
+MAX_EVIDENCE_OVERVIEW = 6
 CHANGE_LABELS = {"added", "removed", "changed", "unclassified", "already_paired", "9a"}
 SCHEMA_VERSION = 1
+OVERVIEW_SCHEMA_VERSION = 2
+_LEGAL_SUFFIXES = tuple(
+    sorted(
+        (
+            " incorporated",
+            " corporation",
+            " company",
+            " corp.",
+            " corp",
+            " inc.",
+            " inc",
+            " & co.",
+            " & co",
+            " co.",
+            " group",
+            " plc",
+            " l.l.c.",
+            " llc",
+            " ltd.",
+            " ltd",
+        ),
+        key=len,
+        reverse=True,
+    )
+)
+_SKIP_FIRST = {"bank", "the", "new", "group"}
 
 
 class BriefVerificationError(Exception):
@@ -62,9 +92,16 @@ class SectorBrief:
 
 
 @dataclass
+class OverviewDraft:
+    themes: list[Theme]
+    takeaways: dict[str, list[Theme]]
+
+
+@dataclass
 class BriefSet:
     overview: list[Theme]
     sectors: dict[str, SectorBrief]
+    takeaways: dict[str, list[Theme]] = field(default_factory=dict)
 
 
 def drafts_present(draft_dir: Path) -> bool:
@@ -129,6 +166,7 @@ def verify_drafts(draft_dir: Path, companies: list[CompanyResult]) -> BriefSet:
         except json.JSONDecodeError as exc:
             errors.append(f"overview.json: not valid JSON ({exc}).")
     overview: list[Theme] = []
+    takeaways: dict[str, list[Theme]] = {}
     if overview_payload is not None and not errors:
         parsed, problems = validate_document(
             overview_payload,
@@ -138,15 +176,16 @@ def verify_drafts(draft_dir: Path, companies: list[CompanyResult]) -> BriefSet:
         )
         if problems:
             errors.extend(f"overview.json: {problem}" for problem in problems)
-        elif isinstance(parsed, list):
-            overview = parsed
+        elif isinstance(parsed, OverviewDraft):
+            overview = parsed.themes
+            takeaways = parsed.takeaways
     if errors:
         raise BriefVerificationError(errors)
     if not overview and any(brief.themes for brief in sectors.values()):
         raise BriefVerificationError(
-            ["overview.json: no themes, but at least one sector brief has a theme."]
+            ["overview.json: no cross-sector themes, but at least one sector brief has a theme."]
         )
-    return BriefSet(overview=overview, sectors=sectors)
+    return BriefSet(overview=overview, sectors=sectors, takeaways=takeaways)
 
 
 def validate_document(
@@ -156,13 +195,14 @@ def validate_document(
     kind: str,
     sector: str | None = None,
     allowed_quotes: set[tuple[str, str, str, str, str]] | None = None,
-) -> tuple[SectorBrief | list[Theme] | None, list[str]]:
+) -> tuple[SectorBrief | OverviewDraft | None, list[str]]:
     """Check one draft object. Return the structured brief and a list of errors."""
     errors: list[str] = []
     if not isinstance(payload, dict):
         return None, ["draft is not a JSON object."]
-    if payload.get("schema_version") != SCHEMA_VERSION:
-        errors.append(f"schema_version must be {SCHEMA_VERSION}.")
+    expected_version = OVERVIEW_SCHEMA_VERSION if kind == "overview" else SCHEMA_VERSION
+    if payload.get("schema_version") != expected_version:
+        errors.append(f"schema_version must be {expected_version}.")
     if payload.get("kind") != kind:
         errors.append(f"kind must be {kind!r}.")
     by_ticker = {company.ticker: company for company in companies}
@@ -173,13 +213,16 @@ def validate_document(
         allowed_tickers = {company.ticker for company in peers}
         if len(peers) != 2:
             errors.append(f"{sector} does not have two companies in the bundle.")
-        divergence, divergence_errors = _divergence(payload.get("divergence"), by_ticker, allowed_tickers, allowed_quotes)
+        divergence, divergence_errors = _divergence(
+            payload.get("divergence"), by_ticker, allowed_tickers, allowed_quotes, companies
+        )
         errors.extend(divergence_errors)
         themes, theme_errors = _themes(
             payload.get("themes"),
             by_ticker,
             allowed_tickers,
             allowed_quotes,
+            companies,
             limit=MAX_THEMES_SECTOR,
         )
         errors.extend(theme_errors)
@@ -199,19 +242,70 @@ def validate_document(
         by_ticker,
         set(by_ticker),
         allowed_quotes,
+        companies,
         limit=MAX_THEMES_OVERVIEW,
+        evidence_limit=MAX_EVIDENCE_OVERVIEW,
     )
     errors.extend(theme_errors)
+    takeaways, takeaway_errors = _takeaways(payload.get("sectors"), by_ticker, allowed_quotes, companies)
+    errors.extend(takeaway_errors)
+    if not theme_errors:
+        ai_themes = _ai_theme_count(themes)
+        if ai_themes > MAX_AI_THEMES:
+            errors.append(
+                f"overview has {ai_themes} cross-sector themes about artificial intelligence; "
+                f"merge them so at most {MAX_AI_THEMES} remain."
+            )
     if errors:
         return None, errors
-    return themes, []
+    return OverviewDraft(themes=themes, takeaways=takeaways), []
 
 
-def _divergence(raw, by_ticker, allowed_tickers, allowed_quotes):
+def _takeaways(raw, by_ticker, allowed_quotes, companies):
+    expected = [sector for sector, members in _pairs(companies) if len(members) == 2]
+    if not isinstance(raw, list):
+        return {}, ["sectors must be a list of sector takeaways."]
+    found: dict[str, list] = {}
+    errors: list[str] = []
+    for index, item in enumerate(raw, start=1):
+        label = f"sectors[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{label} must be an object.")
+            continue
+        sector_name = item.get("sector")
+        if not isinstance(sector_name, str) or sector_name not in expected:
+            errors.append(f"{label}: sector {sector_name!r} is not a pair in the input bundle.")
+            continue
+        if sector_name in found:
+            errors.append(f"Two takeaway lists for {sector_name}.")
+            continue
+        peers = {company.ticker for company in by_ticker.values() if company.sector == sector_name}
+        themes, theme_errors = _themes(
+            item.get("takeaways"),
+            by_ticker,
+            peers,
+            allowed_quotes,
+            companies,
+            limit=MAX_TAKEAWAYS,
+            label_prefix="takeaways",
+        )
+        errors.extend(f"{sector_name} {problem}" for problem in theme_errors)
+        if not theme_errors and not themes:
+            errors.append(f"{sector_name} needs one or two takeaways.")
+        found[sector_name] = themes
+    for sector_name in expected:
+        if sector_name not in found:
+            errors.append(f"Missing takeaways for {sector_name}.")
+    if errors:
+        return {}, errors
+    return {sector_name: found[sector_name] for sector_name in expected}, []
+
+
+def _divergence(raw, by_ticker, allowed_tickers, allowed_quotes, companies):
     if not isinstance(raw, dict):
         return ("", []), ["divergence must be an object with text and evidence."]
     text = raw.get("text")
-    prose_errors = _prose(text, "divergence.text", sentences_expected=2, max_len=800)
+    prose_errors = _prose(text, "divergence.text", sentences_expected=2, max_len=1000)
     evidence, evidence_errors = _evidence_list(
         raw.get("evidence"),
         by_ticker,
@@ -221,19 +315,31 @@ def _divergence(raw, by_ticker, allowed_tickers, allowed_quotes):
     )
     if not evidence_errors and not evidence:
         evidence_errors.append("divergence.evidence needs at least one quote.")
-    return (text if isinstance(text, str) else "", evidence), prose_errors + evidence_errors
+    cited = {item.ticker for item in evidence}
+    name_errors = _names_need_quotes(text if isinstance(text, str) else "", cited, by_ticker, companies, "divergence.text")
+    return (text if isinstance(text, str) else "", evidence), prose_errors + evidence_errors + name_errors
 
 
-def _themes(raw, by_ticker, allowed_tickers, allowed_quotes, *, limit: int):
+def _themes(
+    raw,
+    by_ticker,
+    allowed_tickers,
+    allowed_quotes,
+    companies,
+    *,
+    limit: int,
+    evidence_limit: int = MAX_EVIDENCE,
+    label_prefix: str = "themes",
+):
     if not isinstance(raw, list):
-        return [], ["themes must be a list."]
+        return [], [f"{label_prefix} must be a list."]
     if len(raw) > limit:
-        return [], [f"themes has {len(raw)} items; the maximum is {limit}."]
+        return [], [f"{label_prefix} has {len(raw)} items; the maximum is {limit}."]
     themes: list[Theme] = []
     errors: list[str] = []
     titles: set[str] = set()
     for index, item in enumerate(raw, start=1):
-        label = f"themes[{index}]"
+        label = f"{label_prefix}[{index}]"
         if not isinstance(item, dict):
             errors.append(f"{label} must be an object.")
             continue
@@ -249,7 +355,7 @@ def _themes(raw, by_ticker, allowed_tickers, allowed_quotes, *, limit: int):
                 errors.append(f"{label}.title repeats {title_text!r}.")
             titles.add(title_text)
             errors.extend(_no_emoji(title_text, f"{label}.title"))
-        errors.extend(_prose(item.get("what_changed"), f"{label}.what_changed", sentences_expected=2, max_len=800))
+        errors.extend(_prose(item.get("what_changed"), f"{label}.what_changed", sentences_expected=2, max_len=1000))
         errors.extend(
             _prose(item.get("audit_consideration"), f"{label}.audit_consideration", sentences_expected=1, max_len=400)
         )
@@ -259,10 +365,26 @@ def _themes(raw, by_ticker, allowed_tickers, allowed_quotes, *, limit: int):
             allowed_tickers,
             allowed_quotes,
             field_name=f"{label}.evidence",
+            evidence_limit=evidence_limit,
         )
         errors.extend(evidence_errors)
         if not evidence_errors and not evidence:
             errors.append(f"{label}.evidence needs at least one quote.")
+        cited = {quote.ticker for quote in evidence}
+        for field_name, field_value in (
+            ("title", title_text),
+            ("what_changed", item.get("what_changed")),
+            ("audit_consideration", item.get("audit_consideration")),
+        ):
+            errors.extend(
+                _names_need_quotes(
+                    field_value if isinstance(field_value, str) else "",
+                    cited,
+                    by_ticker,
+                    companies,
+                    f"{label}.{field_name}",
+                )
+            )
         if not errors:
             themes.append(
                 Theme(
@@ -277,11 +399,11 @@ def _themes(raw, by_ticker, allowed_tickers, allowed_quotes, *, limit: int):
     return themes, []
 
 
-def _evidence_list(raw, by_ticker, allowed_tickers, allowed_quotes, *, field_name: str):
+def _evidence_list(raw, by_ticker, allowed_tickers, allowed_quotes, *, field_name: str, evidence_limit: int = MAX_EVIDENCE):
     if not isinstance(raw, list):
         return [], [f"{field_name} must be a list."]
-    if len(raw) > MAX_EVIDENCE:
-        return [], [f"{field_name} has {len(raw)} quotes; the maximum is {MAX_EVIDENCE}."]
+    if len(raw) > evidence_limit:
+        return [], [f"{field_name} has {len(raw)} quotes; the maximum is {evidence_limit}."]
     evidence: list[Evidence] = []
     errors: list[str] = []
     for index, item in enumerate(raw, start=1):
@@ -438,6 +560,80 @@ def _prose(value, label: str, *, sentences_expected: int, max_len: int) -> list[
         errors.append(f"{label} has {count} sentences; expected {sentences_expected}.")
     errors.extend(_no_emoji(text, label))
     return errors
+
+
+def company_aliases(company: CompanyResult) -> list[str]:
+    """Names a reader would use for this company, longest first."""
+    names = [company.display_name.strip()]
+    trimmed = company.display_name.strip()
+    changed = True
+    while changed and trimmed:
+        changed = False
+        lower = trimmed.lower()
+        for suffix in _LEGAL_SUFFIXES:
+            if lower.endswith(suffix):
+                trimmed = trimmed[: -len(suffix)].strip(" ,")
+                if trimmed and trimmed not in names:
+                    names.append(trimmed)
+                changed = True
+                break
+    if " & " in trimmed:
+        names.append(trimmed.replace(" & ", " and "))
+        left, _, right = trimmed.partition(" & ")
+        left, right = left.strip(), right.strip()
+        if left and left == right and " " not in left:
+            names.append(f"{left[0]}&{right[0]}")
+    words = trimmed.split()
+    if words and len(words[0]) >= 4 and words[0].lower() not in _SKIP_FIRST:
+        names.append(words[0])
+    if len(words) >= 2 and len(words[0]) >= 4 and len(words[1]) >= 4 and words[1][:1].isupper():
+        names.append(words[0] + words[1])
+    unique: list[str] = []
+    for name in names:
+        if name and name not in unique:
+            unique.append(name)
+    unique.sort(key=len, reverse=True)
+    return unique
+
+
+def named_tickers(text: str, companies: list[CompanyResult]) -> list[str]:
+    """Covered companies named in prose. Tickers match only in uppercase, so 'cost' is not COST."""
+    found: list[str] = []
+    for company in companies:
+        matched = False
+        for alias in company_aliases(company):
+            pattern = re.compile(
+                r"(?<![A-Za-z0-9])" + re.escape(alias) + r"(?:'s|’s)?(?![A-Za-z0-9])",
+                re.IGNORECASE,
+            )
+            if pattern.search(text):
+                matched = True
+                break
+        if not matched and len(company.ticker) >= 3:
+            ticker = re.compile(r"(?<![A-Za-z0-9])" + re.escape(company.ticker) + r"(?![A-Za-z0-9])")
+            matched = ticker.search(text) is not None
+        if matched:
+            found.append(company.ticker)
+    return found
+
+
+def _names_need_quotes(text: str, cited: set[str], by_ticker, companies, label: str) -> list[str]:
+    errors = []
+    for ticker in named_tickers(text, companies):
+        if ticker not in cited:
+            errors.append(
+                f"{label} names {by_ticker[ticker].display_name}, but this item cites no quote from that company."
+            )
+    return errors
+
+
+def _ai_theme_count(themes: list[Theme]) -> int:
+    count = 0
+    for theme in themes:
+        text = f"{theme.title}\n{theme.what_changed}"
+        if re.search(r"\bAI\b", text) or "artificial intelligence" in text.lower():
+            count += 1
+    return count
 
 
 def _no_emoji(text: str, label: str) -> list[str]:

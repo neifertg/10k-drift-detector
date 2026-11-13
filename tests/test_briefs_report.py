@@ -2,6 +2,7 @@ import json
 
 from drift_detector.bundle import export_bundle
 from drift_detector.pipeline import render_from_bundle
+from drift_detector.report import plain_change
 from tests.fixtures.example_brief import ALPHA_ADDED, BETA_TARIFF, companies, overview_draft, sector_draft
 
 
@@ -25,9 +26,16 @@ def test_verified_fixture_renders_the_overview_and_the_sector_brief(tmp_path):
     index = (tmp_path / "docs" / "index.html").read_text()
     sector = (tmp_path / "docs" / "peers" / "example.html").read_text()
     company = (tmp_path / "docs" / "company" / "aaa.html").read_text()
+    body, _, method = index.partition("<details><summary>How a passage")
     assert "Emerging risks for the audit plan" in index
-    assert "Artificial intelligence" in index
+    assert "Artificial intelligence" in body
+    assert "Tariffs on imported merchandise" in body
     assert ALPHA_ADDED in index
+    assert "Change: Added." in index
+    assert "Stored comparison" not in index
+    assert "unclassified" not in body
+    assert "period end" not in body
+    assert "period end" in method
     assert "Audit plan" in index
     assert "It is not investment advice." in index
     assert "Briefs not yet generated" not in index
@@ -37,6 +45,13 @@ def test_verified_fixture_renders_the_overview_and_the_sector_brief(tmp_path):
     assert "Passage-level comparison" in sector
     assert "This page is the passage-level comparison." in company
     assert "<script>" not in index
+
+
+def test_plain_change_hides_the_matcher_label():
+    assert plain_change("unclassified") == "Reworded"
+    assert plain_change("already_paired") == "Reworded"
+    assert plain_change("added") == "Added"
+    assert "unclassified" not in plain_change("unclassified")
 
 
 def test_prose_is_escaped(tmp_path):
@@ -56,9 +71,12 @@ def test_missing_drafts_leave_a_clear_empty_state(tmp_path):
     assert code == 0
     index = (tmp_path / "docs" / "index.html").read_text()
     sector = (tmp_path / "docs" / "peers" / "example.html").read_text()
+    body, _, method = index.partition("<details><summary>How a passage")
     assert "Briefs not yet generated" in index
     assert "Briefs not yet generated" in sector
     assert ALPHA_ADDED not in index
+    assert "period end" not in body
+    assert "period end" in method
     assert (tmp_path / "docs" / "company" / "aaa.html").exists()
 
 

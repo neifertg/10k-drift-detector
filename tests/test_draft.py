@@ -13,6 +13,10 @@ def test_prompt_requires_a_verbatim_quote_and_an_accession():
     assert "Character for character" in system
     overview = load_prompt("overview_brief.md")
     assert "quote exactly" in overview
+    assert "Name a company only when the evidence on that same item quotes it." in system
+    assert "Name a company only when the evidence on that same item quotes it." in overview
+    assert "takeaways" in overview
+    assert "at most two of the four themes may be about artificial intelligence" in overview
     assert "audit_consideration" in system
     assert "audit_consideration" in overview
 
@@ -94,6 +98,7 @@ def test_draft_briefs_writes_verified_json_and_does_not_send_the_api_key(tmp_pat
             text = json.dumps(overview_draft())
         return {
             "stop_reason": "end_turn",
+            "usage": {"input_tokens": 1200, "output_tokens": 340, "cache_read_input_tokens": 50},
             "content": [
                 {"type": "thinking", "thinking": "not part of the draft"},
                 {"type": "text", "text": text},
@@ -116,6 +121,12 @@ def test_draft_briefs_writes_verified_json_and_does_not_send_the_api_key(tmp_pat
     assert "test-key-should-not-appear" not in json.dumps(calls[0])
     overview_request = calls[1]["messages"][0]["content"]
     assert ALPHA_ADDED in overview_request
+    usage = json.loads((out / "token-usage.json").read_text())
+    assert [row["label"] for row in usage["requests"]] == ["Example", "overview"]
+    assert usage["requests"][0]["input_tokens"] == 1200
+    assert usage["requests"][1]["output_tokens"] == 340
+    assert usage["requests"][0]["cache_read_input_tokens"] == 50
+    assert "test-key-should-not-appear" not in (out / "token-usage.json").read_text()
 
 
 def test_a_bad_quote_is_retried_once_and_then_rejected(tmp_path, monkeypatch):

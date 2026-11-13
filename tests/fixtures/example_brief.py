@@ -84,7 +84,7 @@ def sector_draft() -> dict:
                 "what_changed": (
                     "Alpha's latest risk-factor section adds a sentence on incorrect responses from "
                     "artificial intelligence used in customer service. "
-                    "Beta's latest section does not contain that sentence."
+                    "The sentence says those responses could reach clients."
                 ),
                 "audit_consideration": (
                     "Ask whether customer-service responses produced by a model are reviewed before they reach a client."
@@ -97,7 +97,7 @@ def sector_draft() -> dict:
 
 def overview_draft() -> dict:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "overview",
         "themes": [
             {
@@ -110,6 +110,22 @@ def overview_draft() -> dict:
                     "Ask whether a model that answers clients is checked before the response is sent."
                 ),
                 "evidence": [_evidence("AAA", ALPHA_CURRENT, ALPHA_ADDED, "added")],
+            }
+        ],
+        "sectors": [
+            {
+                "sector": "Example",
+                "takeaways": [
+                    {
+                        "title": "Tariffs on imported merchandise",
+                        "what_changed": (
+                            "Beta's latest risk-factor section adds a sentence on tariffs increasing the cost of imported merchandise. "
+                            "The sentence says that cost may rise."
+                        ),
+                        "audit_consideration": "Ask how a tariff increase would show up in the cost of goods.",
+                        "evidence": [_evidence("BBB", BETA_CURRENT, BETA_TARIFF, "added")],
+                    }
+                ],
             }
         ],
     }

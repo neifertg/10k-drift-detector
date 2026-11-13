@@ -461,8 +461,8 @@ def index_page(
         '<div class="brief">',
         "<h1>Emerging risks for the audit plan</h1>",
         "<p>Year-over-year changes in Item 1A (Risk Factors) and Item 9A (Controls and Procedures) "
-        "for the six peer pairs. This page is the short list. Each company page is the passage-level evidence, "
-        "behind the company name.</p>",
+        "for the six peer pairs. The themes are the cross-sector risks. Under Sectors, each pair has "
+        "the one or two changes to consider for that audit plan. Each company page is the passage-level evidence.</p>",
         "<p>A theme is a reading of what the filings added or expanded. It is shown only when every supporting quote "
         "is in the stored extract it cites. It is not a risk rating, not a conclusion that a control failed, "
         "and not investment advice.</p>",
@@ -487,20 +487,26 @@ def index_page(
             "The quoted passages are the evidence. The hook is off unless DRIFT_LLM_SUMMARY is set.</p>"
             f"<blockquote><p>{e(model_summary)}</p></blockquote></details>"
         )
-    parts.append("<h2>Sectors</h2>")
+    parts.append('<h2 id="sectors">Sectors</h2>')
     for peer in peers:
         members = [company for company in companies if company.sector == peer.sector]
         links = " and ".join(
             f'<a href="company/{e(company.ticker.lower())}.html">{e(company.display_name)}</a>'
             for company in members
         )
-        parts.append(f"<h3><a href=\"peers/{e(sector_slug(peer.sector))}.html\">{e(peer.sector)}</a></h3>")
+        brief_href = f"peers/{e(sector_slug(peer.sector))}.html"
+        parts.append(f'<h3><a href="{brief_href}">{e(peer.sector)}</a></h3>')
         if links:
             parts.append(f"<p>{links}.</p>")
-        parts.append(f"<p>{e(peer.period_statement)}</p>")
+        takeaways = briefs.takeaways.get(peer.sector) if briefs else None
+        if takeaways:
+            parts.append(_theme_list(takeaways, by_ticker, depth=0))
+            parts.append(f'<p class="src"><a href="{brief_href}">Full {e(peer.sector)} brief</a>.</p>')
+        else:
+            parts.append(f'<p class="src"><a href="{brief_href}">Sector brief</a>.</p>')
     parts.append("</div>")
     parts.append("<details><summary>How a passage is compared, and what this does not do</summary>")
-    parts.append(_methodology())
+    parts.append(_methodology(peers))
     parts.append("</details>")
     parts.append(
         f'<footer><p>Generated {e(generated_at)} by 10k-drift-detector {e(__version__)}. '
@@ -608,6 +614,18 @@ def _company_line(theme: Theme, by_ticker: dict[str, CompanyResult], depth: int)
     return f'<p class="who">Companies: {", ".join(links)}.</p>'
 
 
+def plain_change(change: str) -> str:
+    """Reader-facing label. The stored value stays the comparison's own word."""
+    return {
+        "added": "Added",
+        "removed": "Removed",
+        "changed": "Reworded",
+        "unclassified": "Reworded",
+        "already_paired": "Reworded",
+        "9a": "Controls language",
+    }.get(change, "Reworded")
+
+
 def _evidence_details(evidence, depth: int) -> str:
     if not evidence:
         return ""
@@ -621,7 +639,7 @@ def _evidence_details(evidence, depth: int) -> str:
             f'<p class="src">{e(item.company_name)} ({e(item.ticker)}). '
             f"Period ended {e(item.report_date)}, Item {e(item.item)}. "
             f'Accession <span class="acc">{e(item.accession)}</span>. '
-            f"Stored comparison: {e(item.change)}. "
+            f"Change: {e(plain_change(item.change))}. "
             f'<a href="{e(item.document_url)}">Filing</a>. '
             f'<a href="{e(item.passage_url)}">Passage in the filing</a>.</p>'
             "</blockquote>"
@@ -629,9 +647,15 @@ def _evidence_details(evidence, depth: int) -> str:
     return f"<details><summary>{label}</summary>{''.join(blocks)}</details>"
 
 
-def _methodology() -> str:
+def _methodology(peers: list[PeerResult] | None = None) -> str:
+    periods = ""
+    if peers:
+        rows = "\n".join(
+            f"<p><strong>{e(peer.sector)}.</strong> {e(peer.period_statement)}</p>" for peer in peers
+        )
+        periods = f"<h2>Which periods are compared</h2>\n{rows}\n"
     return f"""
-<h2>How a change is called</h2>
+{periods}<h2>How a change is called</h2>
 <div class="method">
 <p>Passages are split on bold headings where the filing has them, otherwise on paragraphs. Passages are paired one-to-one, greedily, when content-token overlap is at least {ALIGN_THRESHOLD:.2f}. A leftover whose closest passage is still at or above that line was not paired because the closest passage was already matched; it is labeled already paired, not added or removed. Overlap from {UNCERTAIN_THRESHOLD:.2f} up to, but not including, {ALIGN_THRESHOLD:.2f} is left unclassified. Below {UNCERTAIN_THRESHOLD:.2f}, the passage is added or removed.</p>
 <p>Content tokens drop function words and keep negations, so removing “not” is not treated as noise. A matched pair is date-only when every added or removed token is a four-digit year, a month name, or an integer from 1 to 31 sitting within three tokens of a month name. Other number changes are kept.</p>

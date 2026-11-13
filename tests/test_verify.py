@@ -4,6 +4,7 @@ import json
 import pytest
 
 from drift_detector.models import AlignedRow, CompanyResult, Section
+from drift_detector.verify import named_tickers
 from drift_detector.textutil import clean_text
 from drift_detector.verify import BriefVerificationError, validate_document, verify_drafts
 from tests.fixtures.example_brief import (
@@ -76,6 +77,10 @@ def test_quote_in_the_extract_but_not_in_a_change_fails():
 
 def test_overview_cannot_invent_a_quote_that_is_not_in_a_sector_brief(tmp_path):
     bad_overview = overview_draft()
+    bad_overview["themes"][0]["what_changed"] = (
+        "Beta's latest risk-factor section adds a sentence on tariffs increasing the cost of imported merchandise. "
+        "The sentence says that cost may rise."
+    )
     bad_overview["themes"][0]["evidence"][0]["quote"] = (
         "Beta's cost of goods may rise if tariffs increase on imported merchandise sold in its stores."
     )
@@ -91,6 +96,10 @@ def test_overview_cannot_invent_a_quote_that_is_not_in_a_sector_brief(tmp_path):
     assert verified.overview[0].evidence[0].ticker == "BBB"
 
     sector = sector_draft()
+    sector["divergence"]["text"] = (
+        "Alpha added language on artificial intelligence in customer service, and the peer extract does not contain that sentence. "
+        "The comparison uses only the extracted passages."
+    )
     sector["divergence"]["evidence"] = [sector["divergence"]["evidence"][0]]
     sector["themes"][0]["evidence"] = [sector["themes"][0]["evidence"][0]]
     blocked = _write(tmp_path / "blocked", sector, bad_overview)
@@ -106,6 +115,62 @@ def test_incomplete_draft_set_fails(tmp_path):
     with pytest.raises(BriefVerificationError) as caught:
         verify_drafts(tmp_path, companies())
     assert any("overview.json" in error for error in caught.value.errors)
+
+
+def test_prose_cannot_name_a_company_it_does_not_cite():
+    payload = sector_draft()
+    payload["themes"][0]["what_changed"] = (
+        "Alpha's latest risk-factor section adds a sentence on incorrect responses from artificial intelligence. "
+        "Beta's latest section does not contain that sentence."
+    )
+    _brief, errors = validate_document(payload, companies(), kind="sector", sector="Example")
+    assert any("Beta Audit Co." in error and "no quote" in error for error in errors)
+
+
+def test_three_artificial_intelligence_themes_must_be_merged():
+    payload = overview_draft()
+    theme = payload["themes"][0]
+    payload["themes"] = []
+    for title in (
+        "Artificial intelligence in service",
+        "Artificial intelligence in operations",
+        "Artificial intelligence in controls",
+    ):
+        copy = dict(theme)
+        copy["title"] = title
+        payload["themes"].append(copy)
+    _brief, errors = validate_document(payload, companies(), kind="overview")
+    assert any("artificial intelligence" in error for error in errors)
+
+
+def test_ordinary_words_are_not_company_names():
+    costco = CompanyResult(
+        ticker="COST",
+        display_name="Costco Wholesale Corporation",
+        edgar_name="COSTCO",
+        cik="0000909832",
+        sector="Retail",
+    )
+    bac = CompanyResult(
+        ticker="BAC",
+        display_name="Bank of America Corporation",
+        edgar_name="BANK OF AMERICA",
+        cik="0000070858",
+        sector="Banking",
+    )
+    jnj = CompanyResult(
+        ticker="JNJ",
+        display_name="Johnson & Johnson",
+        edgar_name="JOHNSON",
+        cik="0000200406",
+        sector="Healthcare",
+    )
+    assert named_tickers("the cost of goods may rise", [costco]) == []
+    assert named_tickers("Costco expanded its trade language.", [costco]) == ["COST"]
+    assert named_tickers("COST expanded its trade language.", [costco]) == ["COST"]
+    assert named_tickers("a bank could fail in a stress", [bac]) == []
+    assert named_tickers("Bank of America expanded its capital language.", [bac]) == ["BAC"]
+    assert named_tickers("J&J added a separation risk.", [jnj]) == ["JNJ"]
 
 
 def test_two_sentences_are_required():
