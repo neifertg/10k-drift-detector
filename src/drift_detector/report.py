@@ -7,8 +7,10 @@ import html
 from pathlib import Path
 
 from drift_detector import __version__
+from drift_detector.bundle import sector_slug
 from drift_detector.flags import SIGNAL_TITLES
 from drift_detector.models import AlignedRow, CompanyResult, Flag, PeerPassage, PeerResult, Quote
+from drift_detector.verify import BriefSet, Theme
 from drift_detector.textutil import (
     ALIGN_THRESHOLD,
     UNCERTAIN_THRESHOLD,
@@ -28,7 +30,7 @@ def _page(title: str, body: str, depth: int) -> str:
     prefix = "../" * depth
     crumb = ""
     if depth:
-        crumb = f'<p class="crumb"><a href="{prefix}index.html">All companies</a></p>'
+        crumb = f'<p class="crumb"><a href="{prefix}index.html">Audit plan</a></p>'
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -293,6 +295,8 @@ def company_page(company: CompanyResult, generated_at: str) -> str:
         "<p>Comparisons are this company's own consecutive 10-Ks. "
         "Item 9A flags are rules over the extracted sentences. "
         "They are not a judgment that controls are effective, and they are not a legal conclusion.</p>"
+        f'<p class="src"><a href="../peers/{e(sector_slug(company.sector))}.html">{e(company.sector)} brief</a>. '
+        "This page is the passage-level comparison.</p>"
     )
     parts = [intro, "<h2>Filings</h2>", _filing_table(company)]
     nines = [c for c in company.comparisons if c.item == "9A"]
@@ -347,14 +351,26 @@ def _peer_quote_list(passages: list[PeerPassage], empty: str) -> str:
     return "\n".join(blocks)
 
 
-def peer_page(peer: PeerResult, companies: dict[str, CompanyResult], generated_at: str) -> str:
+def peer_page(
+    peer: PeerResult,
+    companies: dict[str, CompanyResult],
+    generated_at: str,
+    *,
+    briefs: BriefSet | None = None,
+    brief_errors: list[str] | None = None,
+) -> str:
     left = companies[peer.left_ticker]
     right = companies[peer.right_ticker]
+    sector_brief = briefs.sectors.get(peer.sector) if briefs else None
     body = [
+        '<div class="brief">',
         f"<h1>{e(peer.sector)}</h1>",
         f"<p><a href=\"../company/{e(left.ticker.lower())}.html\">{e(left.display_name)}</a> "
         f"and <a href=\"../company/{e(right.ticker.lower())}.html\">{e(right.display_name)}</a>.</p>",
         f"<p>{e(peer.period_statement)}</p>",
+        _sector_status(sector_brief, brief_errors, depth=1),
+        "</div>",
+        "<details><summary>Passage-level comparison</summary>",
     ]
     if not peer.supported:
         body.append(f"<p>Peer comparison of risk-factor passages is not supported. {e(peer.reason)}</p>")
@@ -422,25 +438,12 @@ def peer_page(peer: PeerResult, companies: dict[str, CompanyResult], generated_a
             f"<th>{e(left.display_name)}</th><th>{e(right.display_name)}</th></tr></thead>"
             f"<tbody>{''.join(rows)}</tbody></table>"
         )
+    body.append("</details>")
     body.append(
         f'<footer><p>Generated {e(generated_at)} by 10k-drift-detector {e(__version__)}. '
         "This is a wording comparison of public filings. It is not investment advice.</p></footer>"
     )
-    return _page(f"{peer.sector} peer comparison", "\n".join(body), 1)
-
-
-def _interesting(line: str) -> bool:
-    low = line.lower()
-    keys = (
-        "wording changed",
-        "the wording changed",
-        "the sentences changed",
-        "not supported",
-        "not effective",
-        "describes_change",
-        "assertion",
-    )
-    return any(k in low for k in keys)
+    return _page(f"{peer.sector} brief", "\n".join(body), 1)
 
 
 def index_page(
@@ -449,61 +452,210 @@ def index_page(
     generated_at: str,
     *,
     model_summary: str | None,
+    briefs: BriefSet | None = None,
+    brief_errors: list[str] | None = None,
 ) -> str:
     peer_by_sector = {p.sector: p for p in peers}
+    by_ticker = {company.ticker: company for company in companies}
     parts = [
-        "<h1>10-K disclosure drift</h1>",
-        "<p>Item 1A (Risk Factors) and Item 9A (Controls and Procedures) for twelve companies, "
-        "two in each of six sectors. Each company is compared with its own prior 10-Ks. "
-        "Peers are shown side by side. Every finding on the company and peer pages quotes the filing sentence it came from and links to that filing.</p>",
-        "<p>If a section was not extracted, or the two years were not split the same way, the page says the comparison is not supported. "
-        "It does not fill the gap.</p>",
-        f'<p class="src">Retrieved {e(generated_at)} from SEC EDGAR. '
+        '<div class="brief">',
+        "<h1>Emerging risks for the audit plan</h1>",
+        "<p>Year-over-year changes in Item 1A (Risk Factors) and Item 9A (Controls and Procedures) "
+        "for the six peer pairs. The themes are the cross-sector risks. Under Sectors, each pair has "
+        "the one or two changes to consider for that audit plan. Each company page is the passage-level evidence.</p>",
+        "<p>A theme is a reading of what the filings added or expanded. It is shown only when every supporting quote "
+        "is in the stored extract it cites. It is not a risk rating, not a conclusion that a control failed, "
+        "and not investment advice.</p>",
+        f'<p class="src">Filing extracts retrieved {e(generated_at)} from SEC EDGAR. '
         "Three latest 10-Ks per company where EDGAR has them. "
         "10-K/A amendments are named and not diffed.</p>",
     ]
+    if brief_errors:
+        parts.append(_failure_notice(brief_errors))
+    elif briefs is None or (not briefs.overview and not briefs.sectors):
+        parts.append(_missing_notice())
+    else:
+        if briefs.overview:
+            parts.append("<h2>Across the peer set</h2>")
+            parts.append(_theme_list(briefs.overview, by_ticker, depth=0))
+        else:
+            parts.append("<p>No cross-sector theme was supported by the verified drafts.</p>")
     if model_summary:
         parts.append(
-            '<section><h2>Optional model summary</h2>'
+            "<details><summary>Optional model summary</summary>"
             "<p>This paragraph was produced by the optional model hook. It is not evidence. "
             "The quoted passages are the evidence. The hook is off unless DRIFT_LLM_SUMMARY is set.</p>"
-            f"<blockquote><p>{e(model_summary)}</p></blockquote></section>"
+            f"<blockquote><p>{e(model_summary)}</p></blockquote></details>"
         )
-    for sector, _ in ((p.sector, p) for p in peers):
-        peer = peer_by_sector[sector]
-        members = [c for c in companies if c.sector == sector]
-        parts.append(f"<h2>{e(sector)}</h2>")
-        parts.append(
-            f'<p><a href="peers/{e(_slug(sector))}.html">Peer comparison</a>. {e(peer.index_line)}</p>'
+    parts.append('<h2 id="sectors">Sectors</h2>')
+    for peer in peers:
+        members = [company for company in companies if company.sector == peer.sector]
+        links = " and ".join(
+            f'<a href="company/{e(company.ticker.lower())}.html">{e(company.display_name)}</a>'
+            for company in members
         )
-        for company in members:
-            lines = company.index_lines
-            shown = []
-            for line in lines:
-                if line.startswith("Item 1A") or line.startswith("Material weakness") or line.startswith("Disclosure controls"):
-                    shown.append(line)
-                elif _interesting(line):
-                    shown.append(line)
-            if not shown:
-                shown = lines[:3] or ["No comparison was produced."]
-            items = "".join(f"<li>{e(line)}</li>" for line in shown)
-            parts.append(
-                f'<h3><a href="company/{e(company.ticker.lower())}.html">{e(company.display_name)}</a> '
-                f"({e(company.ticker)})</h3><ul>{items}</ul>"
-            )
-    parts.append(_methodology())
+        brief_href = f"peers/{e(sector_slug(peer.sector))}.html"
+        parts.append(f'<h3><a href="{brief_href}">{e(peer.sector)}</a></h3>')
+        if links:
+            parts.append(f"<p>{links}.</p>")
+        takeaways = briefs.takeaways.get(peer.sector) if briefs else None
+        if takeaways:
+            parts.append(_theme_list(takeaways, by_ticker, depth=0))
+            parts.append(f'<p class="src"><a href="{brief_href}">Full {e(peer.sector)} brief</a>.</p>')
+        else:
+            parts.append(f'<p class="src"><a href="{brief_href}">Sector brief</a>.</p>')
+    parts.append("</div>")
+    parts.append("<details><summary>How a passage is compared, and what this does not do</summary>")
+    parts.append(_methodology(peers))
+    parts.append("</details>")
     parts.append(
         f'<footer><p>Generated {e(generated_at)} by 10k-drift-detector {e(__version__)}. '
         "Requests used the SEC_USER_AGENT environment variable and a minimum interval of 0.2 seconds. "
         "The user agent is not printed here. "
-        '<a href="https://www.sec.gov/os/accessing-edgar-data">SEC fair-access guidance</a>.</p></footer>'
+        '<a href="https://www.sec.gov/os/accessing-edgar-data">SEC fair-access guidance</a>. '
+        "This is a wording comparison of public filings. It is not investment advice.</p></footer>"
     )
-    return _page("10-K disclosure drift", "\n".join(parts), 0)
+    return _page("Emerging risks for the audit plan", "\n".join(parts), 0)
 
 
-def _methodology() -> str:
+def _missing_notice() -> str:
+    return (
+        '<section class="notice">'
+        "<h2>Briefs not yet generated</h2>"
+        "<p>The overview and the sector pages will list emerging or growing risks here after drafts "
+        "are written from the extracted changes and every quote has been checked against the stored filing extract. "
+        "Nothing on this page is filled in ahead of that check.</p>"
+        '<p class="src">From a checkout: <code>python -m drift_detector draft-briefs --input briefs/input --out briefs/drafts</code>, '
+        "then <code>python -m drift_detector render --input briefs/input --drafts briefs/drafts --out docs</code>. "
+        "The environment variable is ANTHROPIC_API_KEY. The model defaults to claude-sonnet-5-5.</p>"
+        "</section>"
+    )
+
+
+def _failure_notice(errors: list[str]) -> str:
+    items = "".join(f"<li>{e(error)}</li>" for error in errors[:30])
+    more = ""
+    if len(errors) > 30:
+        more = f"<p class=\"src\">{len(errors) - 30} more checks failed.</p>"
+    return (
+        '<section class="notice">'
+        "<h2>Briefs did not pass quote verification</h2>"
+        "<p>Drafts are present, and they are not shown. A quote did not match the stored filing extract, "
+        "or the draft did not match the required shape. The passage comparison on the company pages is unchanged.</p>"
+        f"<ul>{items}</ul>{more}"
+        "</section>"
+    )
+
+
+def _sector_status(brief, brief_errors: list[str] | None, *, depth: int) -> str:
+    if brief_errors:
+        return _failure_notice(brief_errors)
+    if brief is None:
+        return (
+            '<section class="notice">'
+            "<h2>Briefs not yet generated</h2>"
+            "<p>The sector brief will appear here after the drafts are written and every quote has been "
+            "checked against the stored filing extract. The passage-level comparison is below.</p>"
+            "</section>"
+        )
+    parts = []
+    if brief.divergence:
+        parts.append("<h2>Where the peers diverge</h2>")
+        parts.append(f"<p>{e(brief.divergence)}</p>")
+        parts.append(_evidence_details(brief.divergence_evidence, depth))
+    if brief.themes:
+        parts.append("<h2>Emerging or growing risks</h2>")
+        parts.append(_theme_list(brief.themes, {}, depth=depth))
+    elif not brief.divergence:
+        parts.append("<p>The verified draft has no theme and no divergence note.</p>")
+    else:
+        parts.append("<p>The verified draft did not support a separate theme for this sector.</p>")
+    return "\n".join(parts)
+
+
+def _theme_list(themes: list[Theme], by_ticker: dict[str, CompanyResult], *, depth: int) -> str:
+    blocks = []
+    seen_slugs: dict[str, int] = {}
+    for theme in themes:
+        slug = sector_slug(theme.title) or "theme"
+        seen_slugs[slug] = seen_slugs.get(slug, 0) + 1
+        if seen_slugs[slug] > 1:
+            slug = f"{slug}-{seen_slugs[slug]}"
+        who = _company_line(theme, by_ticker, depth)
+        blocks.append(
+            f'<article class="theme" id="theme-{e(slug)}">'
+            f"<h3>{e(theme.title)}</h3>"
+            f"{who}"
+            f"<p>{e(theme.what_changed)}</p>"
+            f'<p class="audit"><span class="tag">Audit plan</span> {e(theme.audit_consideration)}</p>'
+            f"{_evidence_details(theme.evidence, depth)}"
+            "</article>"
+        )
+    return "\n".join(blocks)
+
+
+def _company_line(theme: Theme, by_ticker: dict[str, CompanyResult], depth: int) -> str:
+    order: list[str] = []
+    for evidence in theme.evidence:
+        if evidence.ticker not in order:
+            order.append(evidence.ticker)
+    if not order:
+        return ""
+    links = []
+    prefix = "../" * depth
+    for ticker in order:
+        company = by_ticker.get(ticker)
+        name = company.display_name if company else theme.evidence[0].company_name
+        for evidence in theme.evidence:
+            if evidence.ticker == ticker:
+                name = evidence.company_name
+                break
+        links.append(f'<a href="{prefix}company/{e(ticker.lower())}.html">{e(name)}</a>')
+    return f'<p class="who">Companies: {", ".join(links)}.</p>'
+
+
+def plain_change(change: str) -> str:
+    """Reader-facing label. The stored value stays the comparison's own word."""
+    return {
+        "added": "Added",
+        "removed": "Removed",
+        "changed": "Reworded",
+        "unclassified": "Reworded",
+        "already_paired": "Reworded",
+        "9a": "Controls language",
+    }.get(change, "Reworded")
+
+
+def _evidence_details(evidence, depth: int) -> str:
+    if not evidence:
+        return ""
+    count = len(evidence)
+    label = "Supporting quote" if count == 1 else f"Supporting quotes ({count})"
+    blocks = []
+    for item in evidence:
+        blocks.append(
+            "<blockquote>"
+            f"<p>{e(item.quote)}</p>"
+            f'<p class="src">{e(item.company_name)} ({e(item.ticker)}). '
+            f"Period ended {e(item.report_date)}, Item {e(item.item)}. "
+            f'Accession <span class="acc">{e(item.accession)}</span>. '
+            f"Change: {e(plain_change(item.change))}. "
+            f'<a href="{e(item.document_url)}">Filing</a>. '
+            f'<a href="{e(item.passage_url)}">Passage in the filing</a>.</p>'
+            "</blockquote>"
+        )
+    return f"<details><summary>{label}</summary>{''.join(blocks)}</details>"
+
+
+def _methodology(peers: list[PeerResult] | None = None) -> str:
+    periods = ""
+    if peers:
+        rows = "\n".join(
+            f"<p><strong>{e(peer.sector)}.</strong> {e(peer.period_statement)}</p>" for peer in peers
+        )
+        periods = f"<h2>Which periods are compared</h2>\n{rows}\n"
     return f"""
-<h2>How a change is called</h2>
+{periods}<h2>How a change is called</h2>
 <div class="method">
 <p>Passages are split on bold headings where the filing has them, otherwise on paragraphs. Passages are paired one-to-one, greedily, when content-token overlap is at least {ALIGN_THRESHOLD:.2f}. A leftover whose closest passage is still at or above that line was not paired because the closest passage was already matched; it is labeled already paired, not added or removed. Overlap from {UNCERTAIN_THRESHOLD:.2f} up to, but not including, {ALIGN_THRESHOLD:.2f} is left unclassified. Below {UNCERTAIN_THRESHOLD:.2f}, the passage is added or removed.</p>
 <p>Content tokens drop function words and keep negations, so removing “not” is not treated as noise. A matched pair is date-only when every added or removed token is a four-digit year, a month name, or an integer from 1 to 31 sitting within three tokens of a month name. Other number changes are kept.</p>
@@ -519,13 +671,10 @@ def _methodology() -> str:
 <li>Passage matching is greedy and one-to-one. A leftover can overlap another passage at or above 0.45 when that passage was already paired. A full rewrite can show up as a removal plus an addition.</li>
 <li>An integer from 1 to 31 next to a month name is treated as a date.</li>
 <li>The optional model summary is off unless you set it, and it is never the evidence.</li>
+<li>The short list is drafted from the extracted changes. It is published only after each quote is found, after whitespace normalization, in the cited Item 1A or Item 9A extract, and in a stored passage or Item 9A quote for that accession. The audit-plan line is a consideration, not a finding.</li>
 <li>This is a wording comparison of public filings. It is not investment advice.</li>
 </ul>
 """
-
-
-def _slug(sector: str) -> str:
-    return sector.lower().replace(" ", "-").replace("&", "and")
 
 
 def write_report(
@@ -535,6 +684,8 @@ def write_report(
     generated_at: str,
     *,
     model_summary: str | None = None,
+    briefs: BriefSet | None = None,
+    brief_errors: list[str] | None = None,
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "company").mkdir(exist_ok=True)
@@ -543,13 +694,20 @@ def write_report(
     (out_dir / ".nojekyll").write_text("")
     by_ticker = {c.ticker: c for c in companies}
     (out_dir / "index.html").write_text(
-        index_page(companies, peers, generated_at, model_summary=model_summary)
+        index_page(
+            companies,
+            peers,
+            generated_at,
+            model_summary=model_summary,
+            briefs=briefs,
+            brief_errors=brief_errors,
+        )
     )
     for company in companies:
         (out_dir / "company" / f"{company.ticker.lower()}.html").write_text(
             company_page(company, generated_at)
         )
     for peer in peers:
-        (out_dir / "peers" / f"{_slug(peer.sector)}.html").write_text(
-            peer_page(peer, by_ticker, generated_at)
+        (out_dir / "peers" / f"{sector_slug(peer.sector)}.html").write_text(
+            peer_page(peer, by_ticker, generated_at, briefs=briefs, brief_errors=brief_errors)
         )

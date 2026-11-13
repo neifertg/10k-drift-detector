@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-11-13 03:32 UTC",
+  "extractor_version": 5,
+  "description": "Extracted Item 1A and Item 9A text and the year-over-year comparison for each company. This folder is the input to draft-briefs. A quote in a draft is checked against filings[].sections for the accession it cites.",
+  "sectors": [
+    "Banking",
+    "Payments",
+    "Technology",
+    "Retail",
+    "Healthcare",
+    "Energy"
+  ],
+  "companies": [
+    {
+      "ticker": "JPM",
+      "name": "JPMorgan Chase & Co.",
+      "sector": "Banking",
+      "file": "companies/jpm.json"
+    },
+    {
+      "ticker": "BAC",
+      "name": "Bank of America Corporation",
+      "sector": "Banking",
+      "file": "companies/bac.json"
+    },
+    {
+      "ticker": "V",
+      "name": "Visa Inc.",
+      "sector": "Payments",
+      "file": "companies/v.json"
+    },
+    {
+      "ticker": "MA",
+      "name": "Mastercard Incorporated",
+      "sector": "Payments",
+      "file": "companies/ma.json"
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple Inc.",
+      "sector": "Technology",
+      "file": "companies/aapl.json"
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft Corporation",
+      "sector": "Technology",
+      "file": "companies/msft.json"
+    },
+    {
+      "ticker": "WMT",
+      "name": "Walmart Inc.",
+      "sector": "Retail",
+      "file": "companies/wmt.json"
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco Wholesale Corporation",
+      "sector": "Retail",
+      "file": "companies/cost.json"
+    },
+    {
+      "ticker": "UNH",
+      "name": "UnitedHealth Group Incorporated",
+      "sector": "Healthcare",
+      "file": "companies/unh.json"
+    },
+    {
+      "ticker": "JNJ",
+      "name": "Johnson & Johnson",
+      "sector": "Healthcare",
+      "file": "companies/jnj.json"
+    },
+    {
+      "ticker": "XOM",
+      "name": "Exxon Mobil Corporation",
+      "sector": "Energy",
+      "file": "companies/xom.json"
+    },
+    {
+      "ticker": "CVX",
+      "name": "Chevron Corporation",
+      "sector": "Energy",
+      "file": "companies/cvx.json"
+    }
+  ]
+}
