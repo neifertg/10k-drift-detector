@@ -115,6 +115,29 @@ footer {
 
 .crumb { font-family: "Segoe UI", Helvetica, Arial, sans-serif; font-size: 0.9rem; }
 
+.brief { max-width: 40rem; }
+
+.notice {
+  border: 1px solid var(--line);
+  background: var(--soft);
+  padding: 0.9rem 1rem;
+  margin: 1.1rem 0 1.4rem;
+}
+
+.notice h2 { border-top: 0; padding-top: 0; margin-top: 0; }
+
+.theme { margin: 1.3rem 0 0.4rem; }
+
+.who, .audit {
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.98rem;
+}
+
+.audit { margin-top: 0.7rem; }
+
+nav.sectors { font-family: "Segoe UI", Helvetica, Arial, sans-serif; font-size: 0.95rem; }
+nav.sectors a { margin-right: 0.8rem; }
+
 @media (max-width: 800px) {
   .pair { grid-template-columns: 1fr; }
   body { padding: 1.2rem 0.9rem 3rem; }

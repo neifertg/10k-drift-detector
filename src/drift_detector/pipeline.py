@@ -35,9 +35,11 @@ from drift_detector.models import (
     Passage,
     Section,
 )
+from drift_detector.bundle import export_bundle, load_bundle, peer_groups
 from drift_detector.peers import build_peer
 from drift_detector.report import write_report
 from drift_detector.textutil import content_overlap, passage_fragment
+from drift_detector.verify import BriefVerificationError, drafts_present, verify_drafts
 
 logger = logging.getLogger(__name__)
 
@@ -453,7 +455,7 @@ def process_company(
         )
 
 
-def _unsupported_peer(sector: str, members: list[CompanySpec]):
+def _unsupported_peer(sector: str, members):
     from drift_detector.models import PeerResult
 
     names = ", ".join(m.ticker for m in members) or "(none)"
@@ -480,7 +482,9 @@ def run(
     cache_dir: Path,
     *,
     only: str = "",
-) -> None:
+    bundle_dir: Path | None = None,
+    drafts_dir: Path | None = None,
+) -> int:
     user_agent = os.environ.get("SEC_USER_AGENT")
     config = load_config(config_path)
     client = EdgarClient(user_agent or "", cache_dir, config.request_interval_seconds)
@@ -510,8 +514,77 @@ def run(
             ],
         }
     )
-    write_report(companies, peers, out_dir, generated_at, model_summary=model_summary)
+    bundle_path = bundle_dir or Path("briefs/input")
+    drafts_path = drafts_dir or Path("briefs/drafts")
+    briefs = None
+    brief_errors = None
+    if wanted:
+        logger.info("Partial run: the input bundle is left as it is, and drafts are not applied.")
+    else:
+        export_bundle(
+            companies,
+            bundle_path,
+            generated_at,
+            sectors=config.sectors,
+            extractor_version=EXTRACTOR_VERSION,
+        )
+        logger.info("Wrote input bundle to %s", bundle_path)
+        briefs, brief_errors = _briefs_for(companies, drafts_path)
+    write_report(
+        companies,
+        peers,
+        out_dir,
+        generated_at,
+        model_summary=model_summary,
+        briefs=briefs,
+        brief_errors=brief_errors,
+    )
     logger.info("Wrote report to %s", out_dir)
+    if brief_errors:
+        for error in brief_errors:
+            logger.error("%s", error)
+        return 1
+    return 0
+
+
+def render_from_bundle(bundle_dir: Path, drafts_dir: Path, out_dir: Path) -> int:
+    """Rebuild the HTML report from the stored bundle and any verified drafts."""
+    manifest, companies = load_bundle(bundle_dir)
+    generated_at = str(manifest.get("generated_at") or "")
+    for company in companies:
+        company.index_lines = index_lines(company)
+    sectors = [str(sector) for sector in manifest.get("sectors") or []]
+    by_ticker = {company.ticker: company for company in companies}
+    peers = []
+    for sector, members in peer_groups(companies, sectors):
+        if len(members) != 2 or any(member.ticker not in by_ticker for member in members):
+            peers.append(_unsupported_peer(sector, members))
+            continue
+        peers.append(build_peer(members[0], members[1]))
+    briefs, brief_errors = _briefs_for(companies, drafts_dir)
+    write_report(
+        companies,
+        peers,
+        out_dir,
+        generated_at,
+        briefs=briefs,
+        brief_errors=brief_errors,
+    )
+    logger.info("Wrote report to %s", out_dir)
+    if brief_errors:
+        for error in brief_errors:
+            logger.error("%s", error)
+        return 1
+    return 0
+
+
+def _briefs_for(companies: list[CompanyResult], drafts_dir: Path):
+    if not drafts_present(drafts_dir):
+        return None, None
+    try:
+        return verify_drafts(drafts_dir, companies), None
+    except BriefVerificationError as exc:
+        return None, exc.errors
 
 
 def load_app_config(path: Path) -> AppConfig:

@@ -56,6 +56,8 @@ def test_report_escapes_and_keeps_the_quote_and_link(tmp_path):
     assert "https://www.sec.gov/Archives/edgar/data/1/000/filing.htm" in peer_html
     assert "No conclusion is drawn" in company_html or "No comparison is drawn" in company_html
     assert "Optional model summary" not in index
+    assert "Briefs not yet generated" in index
+    assert "Emerging risks for the audit plan" in index
 
 
 def test_already_paired_leftover_is_not_described_as_below_the_threshold(tmp_path):
