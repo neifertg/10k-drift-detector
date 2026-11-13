@@ -4,7 +4,17 @@ import pytest
 
 from drift_detector.bundle import export_bundle
 from drift_detector.draft import DraftError, build_sector_packet, draft_briefs, load_prompt, parse_json_object
-from tests.fixtures.example_brief import ALPHA_ADDED, companies, overview_draft, sector_draft
+from tests.fixtures.example_brief import (
+    ALPHA_ADDED,
+    ALPHA_BASE,
+    BETA_BASE,
+    BETA_TARIFF,
+    _company,
+    _evidence,
+    companies,
+    overview_draft,
+    sector_draft,
+)
 
 
 def test_prompt_requires_a_verbatim_quote_and_an_accession():
@@ -169,3 +179,158 @@ def test_missing_api_key_fails_before_a_call(tmp_path, monkeypatch):
 def test_fenced_json_is_accepted():
     payload = parse_json_object("```json\n{\"schema_version\": 1}\n```")
     assert payload["schema_version"] == 1
+
+
+def _api_ok(payload: dict) -> dict:
+    return {"stop_reason": "end_turn", "usage": {"input_tokens": 10, "output_tokens": 5}, "content": [{"type": "text", "text": json.dumps(payload)}]}
+
+
+def _other_sector_draft() -> dict:
+    raw = sector_draft()
+    raw["sector"] = "Other"
+    raw["divergence"]["text"] = (
+        "Gamma added language on artificial intelligence in customer service, and Delta did not. "
+        "Delta added language on tariffs, and Gamma did not."
+    )
+    raw["divergence"]["evidence"][0]["ticker"] = "CCC"
+    raw["divergence"]["evidence"][0]["accession"] = "0000000003-26-000010"
+    raw["divergence"]["evidence"][1]["ticker"] = "DDD"
+    raw["divergence"]["evidence"][1]["accession"] = "0000000004-26-000010"
+    raw["themes"][0]["what_changed"] = (
+        "Gamma's latest risk-factor section adds a sentence on incorrect responses from "
+        "artificial intelligence used in customer service. "
+        "The sentence says those responses could reach clients."
+    )
+    raw["themes"][0]["evidence"][0]["ticker"] = "CCC"
+    raw["themes"][0]["evidence"][0]["accession"] = "0000000003-26-000010"
+    return raw
+
+
+def _two_overview() -> dict:
+    raw = overview_draft()
+    raw["sectors"].append(
+        {
+            "sector": "Other",
+            "takeaways": [
+                {
+                    "title": "Customer service models",
+                    "what_changed": (
+                        "Gamma's latest risk-factor section adds a sentence on incorrect responses from "
+                        "artificial intelligence used in customer service. "
+                        "The sentence says those responses could reach clients."
+                    ),
+                    "audit_consideration": (
+                        "Ask whether customer-service responses produced by a model are reviewed before they reach a client."
+                    ),
+                    "evidence": [_evidence("CCC", "0000000003-26-000010", ALPHA_ADDED, "added")],
+                }
+            ],
+        }
+    )
+    return raw
+
+
+def _two_sector_bundle(tmp_path):
+    paired = companies() + [
+        _company(
+            ticker="CCC",
+            name="Gamma Audit Co.",
+            cik="0000000003",
+            prior_accession="0000000003-25-000010",
+            current_accession="0000000003-26-000010",
+            base=ALPHA_BASE,
+            added=ALPHA_ADDED,
+            label="Models",
+            document_stem="ccc",
+        ),
+        _company(
+            ticker="DDD",
+            name="Delta Audit Co.",
+            cik="0000000004",
+            prior_accession="0000000004-25-000010",
+            current_accession="0000000004-26-000010",
+            base=BETA_BASE,
+            added=BETA_TARIFF,
+            label="Tariffs",
+            document_stem="ddd",
+        ),
+    ]
+    paired[2].sector = "Other"
+    paired[3].sector = "Other"
+    bundle = tmp_path / "input"
+    export_bundle(paired, bundle, "2026-11-13 00:00 UTC", sectors=["Example", "Other"], extractor_version=5)
+    return bundle
+
+
+def _reply_for(body: dict, *, fail_other: bool = False) -> dict:
+    user = body["messages"][0]["content"]
+    if body["system"].startswith("You draft a sector brief"):
+        if "Draft the sector brief for Example." in user:
+            return _api_ok(sector_draft())
+        if "Draft the sector brief for Other." in user:
+            if fail_other:
+                raise DraftError("Anthropic API request failed. HTTP 400: credit balance is too low.")
+            return _api_ok(_other_sector_draft())
+        raise AssertionError(user[:120])
+    return _api_ok(_two_overview())
+
+
+def test_an_api_error_keeps_sector_files_already_written(tmp_path, monkeypatch):
+    bundle = _two_sector_bundle(tmp_path)
+    out = tmp_path / "drafts"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    with pytest.raises(DraftError) as caught:
+        draft_briefs(bundle, out, transport=lambda body: _reply_for(body, fail_other=True))
+    message = str(caught.value)
+    assert "Other was not saved" in message
+    assert "HTTP 400" in message
+    assert "kept" in message
+    assert (out / "sectors" / "example.json").exists()
+    assert not (out / "sectors" / "other.json").exists()
+    assert not (out / "overview.json").exists()
+
+
+def test_a_later_run_skips_a_valid_sector_unless_forced(tmp_path, monkeypatch):
+    bundle = _two_sector_bundle(tmp_path)
+    out = tmp_path / "drafts"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    draft_briefs(bundle, out, transport=lambda body: _reply_for(body))
+
+    def boom(body):
+        raise DraftError("should not be called")
+
+    draft_briefs(bundle, out, transport=boom)
+    forced = []
+
+    def collect(body):
+        forced.append(body["messages"][0]["content"][:80])
+        return _reply_for(body)
+
+    draft_briefs(bundle, out, transport=collect, force=True)
+    assert any("for Example" in text for text in forced)
+    assert any("for Other" in text for text in forced)
+    assert any("sector briefs" in text for text in forced)
+
+
+def test_only_drafts_the_named_sector_and_leaves_the_others(tmp_path, monkeypatch):
+    bundle = _two_sector_bundle(tmp_path)
+    out = tmp_path / "drafts"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    seen = []
+
+    def transport(body):
+        seen.append(body["messages"][0]["content"][:48])
+        return _reply_for(body)
+
+    draft_briefs(bundle, out, transport=transport, only="Other")
+    assert any("Other" in text for text in seen)
+    assert not any("Example" in text for text in seen)
+    assert (out / "sectors" / "other.json").exists()
+    assert not (out / "sectors" / "example.json").exists()
+    assert not (out / "overview.json").exists()
+
+    seen.clear()
+    draft_briefs(bundle, out, transport=transport, only="example")
+    assert any("Example" in text for text in seen)
+    assert not any("for Other" in text for text in seen)
+    assert (out / "overview.json").exists()

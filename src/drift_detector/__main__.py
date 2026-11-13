@@ -40,6 +40,16 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Print the packet sizes and do not call the API.",
     )
+    draft.add_argument(
+        "--force",
+        action="store_true",
+        help="Redraft a sector even when its file is already a valid draft.",
+    )
+    draft.add_argument(
+        "--only",
+        default="",
+        help="Comma-separated sector names to draft. Other sectors are left as they are.",
+    )
 
     verify = sub.add_parser(
         "verify-briefs",
@@ -78,7 +88,13 @@ def main(argv: list[str] | None = None) -> int:
         from drift_detector.draft import DraftError, draft_briefs
 
         try:
-            draft_briefs(Path(args.input), Path(args.out), dry_run=args.dry_run)
+            draft_briefs(
+                Path(args.input),
+                Path(args.out),
+                dry_run=args.dry_run,
+                force=args.force,
+                only=args.only,
+            )
         except (DraftError, FileNotFoundError, ValueError, OSError) as exc:
             print(str(exc), file=sys.stderr)
             return 2

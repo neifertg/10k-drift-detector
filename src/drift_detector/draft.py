@@ -75,8 +75,15 @@ def draft_briefs(
     *,
     transport=None,
     dry_run: bool = False,
+    force: bool = False,
+    only: str = "",
 ) -> None:
     """Write briefs/drafts/overview.json and briefs/drafts/sectors/*.json.
+
+    Each sector file is written as soon as that request succeeds. A later run
+    skips a sector that already has a valid file, unless ``force`` is set.
+    ``only`` limits the sectors that are drafted. The overview is written only
+    when every sector file is valid.
 
     ``transport``, when set, is called with the JSON request body and must
     return a Messages API response dict. Tests use it. The CLI does not.
@@ -87,8 +94,11 @@ def draft_briefs(
     if not groups:
         raise DraftError("The input bundle has no sector with two companies.")
     packets = [(sector, members, build_sector_packet(members[0], members[1])) for sector, members in groups]
+    chosen = _selected_sectors(only, packets)
     if dry_run:
         for sector, members, packet in packets:
+            if chosen is not None and sector not in chosen:
+                continue
             size = len(json.dumps(packet, ensure_ascii=False))
             names = " and ".join(company.ticker for company in members)
             print(f"{sector} ({names}): packet is {size} characters.")
@@ -105,6 +115,9 @@ def draft_briefs(
     if effort.lower() in {"off", "none", "-"}:
         effort = ""
     out_dir.mkdir(parents=True, exist_ok=True)
+    sector_dir = out_dir / "sectors"
+    sector_dir.mkdir(parents=True, exist_ok=True)
+    usage_path = out_dir / "token-usage.json"
     settings = {
         "model": model,
         "api_key": api_key,
@@ -113,26 +126,131 @@ def draft_briefs(
         "version": version,
         "transport": transport,
         "input_generated_at": manifest.get("generated_at") or "",
-        "usage": [],
-        "usage_path": out_dir / "token-usage.json",
+        "usage": _saved_usage(usage_path),
+        "usage_path": usage_path,
     }
     sector_system = load_prompt("sector_brief.md")
-    written: list[tuple[str, SectorBrief, dict]] = []
+    written: list[tuple[str, SectorBrief | None, dict | None]] = []
+    rewrote = False
     for sector, _members, packet in packets:
+        path = sector_dir / f"{sector_slug(sector)}.json"
+        selected = chosen is None or sector in chosen
+        loaded = _load_valid_sector(path, companies, sector)
+        if not selected:
+            written.append((sector, None, None) if loaded is None else (sector, loaded[0], loaded[1]))
+            continue
+        if loaded is not None and not force:
+            logger.info("Skipping %s; %s is already a valid draft. Pass --force to redraft it.", sector, path)
+            written.append((sector, loaded[0], loaded[1]))
+            continue
         logger.info("Drafting %s (%s characters of packet)", sector, len(json.dumps(packet)))
-        payload, brief = _draft_sector(sector, packet, companies, sector_system, settings, label=sector)
+        try:
+            payload, brief = _draft_sector(sector, packet, companies, sector_system, settings, label=sector)
+        except DraftError as exc:
+            raise DraftError(
+                f"{sector} was not saved. {exc} "
+                f"Sector files that already succeeded were kept in {sector_dir}."
+            ) from exc
+        _write(path, payload)
+        rewrote = True
         written.append((sector, brief, payload))
+    missing = [sector for sector, brief, _payload in written if brief is None]
+    if missing:
+        logger.info("Overview was not drafted. No valid draft yet for: %s.", ", ".join(missing))
+        return
     allowed = set()
-    for _sector, brief, _payload in written:
+    overview_packet = []
+    for _sector, brief, payload in written:
+        assert brief is not None and payload is not None
         for evidence in brief.divergence_evidence:
             allowed.add(_quote_key(evidence))
         for theme in brief.themes:
             for evidence in theme.evidence:
                 allowed.add(_quote_key(evidence))
-    overview_packet = [_public_sector(payload) for _sector, _brief, payload in written]
+        overview_packet.append(_public_sector(payload))
+    overview_path = out_dir / "overview.json"
+    if not rewrote and not force and _load_valid_overview(overview_path, companies, allowed) is not None:
+        logger.info("Skipping overview; %s is already a valid draft. Pass --force to redraft it.", overview_path)
+        return
     logger.info("Drafting overview from %s sector briefs", len(overview_packet))
-    overview = _draft_overview(overview_packet, companies, allowed, settings)
-    _publish(out_dir, written, overview)
+    try:
+        overview = _draft_overview(overview_packet, companies, allowed, settings)
+    except DraftError as exc:
+        raise DraftError(
+            f"The overview was not saved. {exc} "
+            f"Sector files that already succeeded were kept in {sector_dir}."
+        ) from exc
+    _write(overview_path, overview)
+    if chosen is None:
+        keep = {f"{sector_slug(sector)}.json" for sector, _members, _packet in packets}
+        for stale in sector_dir.glob("*.json"):
+            if stale.name not in keep:
+                stale.unlink()
+
+
+def _selected_sectors(only: str, packets) -> set[str] | None:
+    names = [part.strip() for part in only.split(",") if part.strip()]
+    if not names:
+        return None
+    by_key = {}
+    for sector, _members, _packet in packets:
+        by_key[sector.lower()] = sector
+        by_key[sector_slug(sector)] = sector
+    chosen: list[str] = []
+    unknown: list[str] = []
+    for name in names:
+        match = by_key.get(name.lower())
+        if match is None:
+            unknown.append(name)
+        elif match not in chosen:
+            chosen.append(match)
+    if unknown:
+        known = ", ".join(sector for sector, _members, _packet in packets)
+        raise DraftError(f"Unknown sector in --only: {', '.join(unknown)}. Known sectors: {known}.")
+    return set(chosen)
+
+
+def _load_valid_sector(path: Path, companies, sector: str) -> tuple[SectorBrief, dict] | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(payload, dict):
+        return None
+    brief, errors = validate_document(payload, companies, kind="sector", sector=sector)
+    if errors or not isinstance(brief, SectorBrief):
+        return None
+    return brief, payload
+
+
+def _load_valid_overview(path: Path, companies, allowed) -> dict | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(payload, dict):
+        return None
+    parsed, errors = validate_document(payload, companies, kind="overview", allowed_quotes=allowed)
+    if errors or not isinstance(parsed, OverviewDraft):
+        return None
+    return payload
+
+
+def _saved_usage(path: Path) -> list:
+    if not path.exists():
+        return []
+    try:
+        saved = json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return []
+    requests = saved.get("requests") if isinstance(saved, dict) else None
+    if not isinstance(requests, list):
+        return []
+    return list(requests)
 
 
 def build_sector_packet(left: CompanyResult, right: CompanyResult) -> dict:
