@@ -1,0 +1,59 @@
+# Peer set for 10-K disclosure drift.
+# A sector listed here with two companies is a peer pair.
+# Comparisons use each company's own consecutive 10-Ks.
+# Fiscal year-ends are taken from the filings, not from this file.
+#
+# Set cik only when the live SEC ticker file does not point at the
+# registrant that files the 10-K. The pipeline records the mismatch.
+
+years: 3
+request_interval_seconds: 0.2
+
+sectors:
+  - Banking
+  - Payments
+  - Technology
+  - Retail
+  - Healthcare
+  - Energy
+
+companies:
+  - ticker: JPM
+    name: JPMorgan Chase & Co.
+    sector: Banking
+  - ticker: BAC
+    name: Bank of America Corporation
+    sector: Banking
+  - ticker: V
+    name: Visa Inc.
+    sector: Payments
+  - ticker: MA
+    name: Mastercard Incorporated
+    sector: Payments
+  - ticker: AAPL
+    name: Apple Inc.
+    sector: Technology
+  - ticker: MSFT
+    name: Microsoft Corporation
+    sector: Technology
+  - ticker: WMT
+    name: Walmart Inc.
+    sector: Retail
+  - ticker: COST
+    name: Costco Wholesale Corporation
+    sector: Retail
+  - ticker: UNH
+    name: UnitedHealth Group Incorporated
+    sector: Healthcare
+  - ticker: JNJ
+    name: Johnson & Johnson
+    sector: Healthcare
+  - ticker: XOM
+    name: Exxon Mobil Corporation
+    sector: Energy
+    # 10-K registrant. The ticker file currently maps XOM elsewhere;
+    # the run states that from the live ticker file rather than from this comment.
+    cik: "0000034088"
+  - ticker: CVX
+    name: Chevron Corporation
+    sector: Energy
