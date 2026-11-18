@@ -1,0 +1,457 @@
+{
+  "schema_version": 2,
+  "kind": "overview",
+  "model": "claude-sonnet-5-5",
+  "prompt_file": "overview_brief.md",
+  "input_generated_at": "2026-11-13 03:32 UTC",
+  "themes": [
+    {
+      "title": "AI governance, security and infrastructure",
+      "what_changed": "JPMorgan Chase added a risk factor on advanced technologies such as generative and agentic AI, and Apple added a dedicated AI risk factor on legal, regulatory, ethical and operational risks. Microsoft added a risk factor on the scale and financing of its AI investments, and Costco described autonomous third-party AI systems that could bypass internal controls.",
+      "audit_consideration": "Does the audit plan include an inventory of AI uses and AI-related capital commitments, with defined controls over governance, third-party models, access boundaries and the funding of AI infrastructure?",
+      "evidence": [
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "The rapid development and deployment of advanced technologies, including generative and agentic AI systems, present a range of risks to JPMorganChase’s businesses and operations"
+        },
+        {
+          "ticker": "AAPL",
+          "accession": "0000320193-26-000026",
+          "item": "1A",
+          "report_date": "2026-09-26",
+          "change": "added",
+          "quote": "Artificial intelligence technologies are increasingly integrated into the Company’s products and services and its business and operations. These technologies present emerging legal, regulatory, ethical and operational risks."
+        },
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "added",
+          "quote": "Our ability to fund these investments depends on our ability to generate sufficient cash flows and obtain financing on acceptable terms."
+        },
+        {
+          "ticker": "COST",
+          "accession": "0000909832-26-000093",
+          "item": "1A",
+          "report_date": "2026-08-30",
+          "change": "changed",
+          "quote": "There is a risk that these autonomous systems could bypass internal controls, lack adequate third-party governance, or result in unauthorized access to data, data leakage, and non-compliance with applicable data privacy laws."
+        }
+      ]
+    },
+    {
+      "title": "AI-enabled cyber threats and third-party exposure",
+      "what_changed": "Mastercard said the widespread use of AI is enhancing the frequency and effectiveness of threat actors, and Costco said AI has automated and accelerated the scale of cybersecurity threats. JPMorgan Chase added that growing interconnectivity with external parties raises the risk of failure or cyber attacks on their systems.",
+      "audit_consideration": "Does the plan test detection and response for AI-accelerated attacks, including those that originate at clients, suppliers and other parties outside the company's own security perimeter?",
+      "evidence": [
+        {
+          "ticker": "MA",
+          "accession": "0001141391-26-000013",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "The widespread use of AI, and its increasing capabilities, is enhancing the frequency and effectiveness of threat actors."
+        },
+        {
+          "ticker": "COST",
+          "accession": "0000909832-26-000093",
+          "item": "1A",
+          "report_date": "2026-08-30",
+          "change": "changed",
+          "quote": "The rapid evolution of AI has automated and accelerated the scale of cybersecurity threats, potentially reducing the time for us to detect and mitigate potential information security incidents."
+        },
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "JPMorganChase’s interconnectivity with clients, customers and other external parties continues to expand, which increases the risk of failure or cyber attacks with respect to the systems of those parties."
+        }
+      ]
+    },
+    {
+      "title": "Regulatory scope and executive action",
+      "what_changed": "Bank of America now refers to Executive Branch Actions alongside laws, rules and regulations, and JPMorgan Chase added executive branch actions to its legal and regulatory risk language. Visa said new payment technologies and growth-strategy capabilities may bring increased licensing, supervisory and compliance obligations.",
+      "audit_consideration": "How does compliance change management capture and assess executive directives and expanding licensing and supervisory obligations that fall outside formal rulemaking?",
+      "evidence": [
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "We operate in a highly regulated industry and are subject to evolving and comprehensive federal, state and foreign LRRs and Executive Branch Actions."
+        },
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "as well as changes to or in the application, interpretation or enforcement of applicable law or executive branch actions"
+        },
+        {
+          "ticker": "V",
+          "accession": "0001403161-26-000134",
+          "item": "1A",
+          "report_date": "2026-09-30",
+          "change": "changed",
+          "quote": "In addition, certain payment technologies and services (e.g., tokenization, push payments and cross-border money movement) and new capabilities in furtherance of our multi-year growth strategy may bring increased licensing, supervisory and compliance obligations."
+        }
+      ]
+    },
+    {
+      "title": "Transactions and business separation",
+      "what_changed": "Chevron rewrote its Hess acquisition risk to say the deal closed in July 2025 and that anticipated benefits must now be realized. Johnson & Johnson added risk factors on the planned separation of its Orthopaedics business, including significant expenses and assumptions that may prove incorrect.",
+      "audit_consideration": "Does the plan cover cost tracking, benefit and synergy reporting, and control carve-out or integration for completed and planned transactions?",
+      "evidence": [
+        {
+          "ticker": "CVX",
+          "accession": "0000093410-26-000078",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "The success of the acquisition of Hess, which closed in July 2025, will depend, in part, on Chevron’s ability to realize the anticipated benefits, including the anticipated run-rate cost synergies, estimated five-year production and free cash flow growth rates, and anticipated higher returns to shareholders over the long-term."
+        },
+        {
+          "ticker": "JNJ",
+          "accession": "0000200406-26-000016",
+          "item": "1A",
+          "report_date": "2025-12-28",
+          "change": "added",
+          "quote": "The Company will incur significant expenses in connection with the planned separation."
+        },
+        {
+          "ticker": "JNJ",
+          "accession": "0000200406-26-000016",
+          "item": "1A",
+          "report_date": "2025-12-28",
+          "change": "added",
+          "quote": "The anticipated benefits of the planned separation are based on a number of assumptions, some of which may prove incorrect."
+        }
+      ]
+    }
+  ],
+  "sectors": [
+    {
+      "sector": "Banking",
+      "takeaways": [
+        {
+          "title": "Interconnectedness and G-SIB surcharge",
+          "what_changed": "JPMorgan Chase added a standalone risk factor on interconnectedness with clients, customers and other external parties as a source of operational risk. Bank of America expanded its capital discussion to say its G-SIB surcharge is expected to rise to 3.5 percent in 2027.",
+          "audit_consideration": "Does the plan test third-party operational monitoring and the capital planning process for the scheduled surcharge increase?",
+          "evidence": [
+            {
+              "ticker": "JPM",
+              "accession": "0001628280-26-008131",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "added",
+              "quote": "JPMorganChase’s interconnectedness with clients, customers and other external parties could be a source of significant operational risk."
+            },
+            {
+              "ticker": "BAC",
+              "accession": "0000070858-26-000157",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "For example, our G-SIB surcharge is expected to increase to 3.5 percent from 3.0 percent in 2027, and could increase further in the future."
+            }
+          ]
+        },
+        {
+          "title": "Digital assets and stablecoins",
+          "what_changed": "Bank of America's strategy risk factor now refers to the nonbank digital asset ecosystem, including nonbank stablecoins. JPMorgan Chase added AI and advanced technology risk alongside this competitive shift.",
+          "audit_consideration": "Does the plan assess how strategic exposure to digital asset competitors is monitored and reported?",
+          "evidence": [
+            {
+              "ticker": "BAC",
+              "accession": "0000070858-26-000157",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "including the further development of the nonbank digital asset ecosystem (e.g., related to nonbank stablecoins or digital asset trading)"
+            },
+            {
+              "ticker": "JPM",
+              "accession": "0001628280-26-008131",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "added",
+              "quote": "JPMorganChase’s operations, results, and competitive standing could be adversely affected by the development of advanced technologies such as AI."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sector": "Payments",
+      "takeaways": [
+        {
+          "title": "Brazil settlement-loss rules",
+          "what_changed": "Visa's later filing describes Central Bank of Brazil regulation that would obligate it to absorb certain settlement-related losses, and says submitted rule provisions are expected to raise its exposure and collateral requirements. Mastercard's later filing also describes Brazilian rules extending responsibility for settlement integrity.",
+          "audit_consideration": "Does the plan cover measurement and monitoring of settlement exposure and collateral in Brazil?",
+          "evidence": [
+            {
+              "ticker": "V",
+              "accession": "0001403161-26-000134",
+              "item": "1A",
+              "report_date": "2026-09-30",
+              "change": "changed",
+              "quote": "the Central Bank of Brazil has adopted regulations applicable to payment networks like Visa that impose enhanced prudential requirements, including requirements that would obligate Visa to absorb certain settlement related losses for certain transactions involving sellers in Brazil when settlement failures occur and our risk mitigation measures do not fully protect against the resulting exposure."
+            },
+            {
+              "ticker": "V",
+              "accession": "0001403161-26-000134",
+              "item": "1A",
+              "report_date": "2026-09-30",
+              "change": "changed",
+              "quote": "we have submitted to the Central Bank of Brazil enhanced operating rule provisions, which, when approved, are expected to increase our settlement exposure and related collateral requirements."
+            },
+            {
+              "ticker": "MA",
+              "accession": "0001141391-26-000013",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "Brazil recently enacted regulation requiring PSOs in Brazil (including Mastercard and Visa) to extend their responsibility for the financial and settlement integrity of payments to merchants."
+            }
+          ]
+        },
+        {
+          "title": "Third-party language models",
+          "what_changed": "Visa's later filing added that its use of AI depends in part on third-party large language models it does not control. Those models may generate inaccurate, biased or unexpected outputs.",
+          "audit_consideration": "Should the plan test governance over reliance on third-party models?",
+          "evidence": [
+            {
+              "ticker": "V",
+              "accession": "0001403161-26-000134",
+              "item": "1A",
+              "report_date": "2026-09-30",
+              "change": "changed",
+              "quote": "Our and our partners’ use of AI depends in part on third-party large language models that we do not control, whose models may generate inaccurate, biased, hallucinated or unexpected outputs that conflict with our business objectives or brand standards."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sector": "Technology",
+      "takeaways": [
+        {
+          "title": "Component supply constraints",
+          "what_changed": "Apple's later filing says it is experiencing supply constraints and rising costs for key components. Microsoft expanded its supply language to cover shortages of semiconductors, networking equipment, power systems and cooling equipment.",
+          "audit_consideration": "Does the plan test how supply constraints and cost increases flow into inventory and purchase commitment reporting?",
+          "evidence": [
+            {
+              "ticker": "AAPL",
+              "accession": "0000320193-26-000026",
+              "item": "1A",
+              "report_date": "2026-09-26",
+              "change": "unclassified",
+              "quote": "For example, the Company is experiencing supply constraints and rising costs driven by industry-wide supply-demand imbalances for key components, including advanced semiconductors, memory and storage."
+            },
+            {
+              "ticker": "MSFT",
+              "accession": "0001193125-26-323660",
+              "item": "1A",
+              "report_date": "2026-06-30",
+              "change": "unclassified",
+              "quote": "We have experienced and may continue to experience supply constraints, including shortages of semiconductors, networking equipment, power systems, cooling equipment, and other key components."
+            }
+          ]
+        },
+        {
+          "title": "Autonomous agents and AI capital spending",
+          "what_changed": "Apple's added AI risk factor lists unintended actions by autonomous or agentic systems and misuse by personnel. Microsoft added that its investments require substantial capital ahead of fully developed revenue streams.",
+          "audit_consideration": "Does the plan cover agent access controls and approval of capital commitments against expected returns?",
+          "evidence": [
+            {
+              "ticker": "AAPL",
+              "accession": "0000320193-26-000026",
+              "item": "1A",
+              "report_date": "2026-09-26",
+              "change": "added",
+              "quote": "unintended or unauthorized actions by autonomous or agentic systems; misuse of artificial intelligence by employees and other personnel; changing public sentiment; bias and discrimination; and online safety and protection of minors."
+            },
+            {
+              "ticker": "MSFT",
+              "accession": "0001193125-26-323660",
+              "item": "1A",
+              "report_date": "2026-06-30",
+              "change": "added",
+              "quote": "These investments are being made at significant scale and on an accelerated timeline, require substantial and increasing capital expenditures and continued access to capital, and are in advance of fully developed revenue streams."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sector": "Retail",
+      "takeaways": [
+        {
+          "title": "Tariff effects at Walmart",
+          "what_changed": "Walmart rewrote its trade risk to say it experienced the impacts of incremental import tariffs during fiscal 2026. It also says it expects the tariff environment to continue in fiscal 2027.",
+          "audit_consideration": "Does the plan examine how tariff costs flow into inventory costing, pricing and margin reporting?",
+          "evidence": [
+            {
+              "ticker": "WMT",
+              "accession": "0000104169-26-000055",
+              "item": "1A",
+              "report_date": "2026-01-31",
+              "change": "changed",
+              "quote": "We experienced the impacts noted above during fiscal 2026 as a result of incremental import tariffs."
+            },
+            {
+              "ticker": "WMT",
+              "accession": "0000104169-26-000055",
+              "item": "1A",
+              "report_date": "2026-01-31",
+              "change": "changed",
+              "quote": "We expect the dynamic tariff environment to continue, including in fiscal 2027, and cannot predict with certainty the future impact that this environment will have on our results of operations or financial performance, which could be material."
+            }
+          ]
+        },
+        {
+          "title": "Walmart fintech and crypto products",
+          "what_changed": "Walmart's later filing added limited access to cryptocurrency and equity investment products through its fintech offerings. It also added compliance language on the sale and custody of those products.",
+          "audit_consideration": "Does the plan assess compliance coverage for newly offered crypto and equity products?",
+          "evidence": [
+            {
+              "ticker": "WMT",
+              "accession": "0000104169-26-000055",
+              "item": "1A",
+              "report_date": "2026-01-31",
+              "change": "changed",
+              "quote": "limited access to cryptocurrency and equity investment products, installment lending and earned wage access"
+            },
+            {
+              "ticker": "WMT",
+              "accession": "0000104169-26-000055",
+              "item": "1A",
+              "report_date": "2026-01-31",
+              "change": "changed",
+              "quote": "the sale and custody of equity and cryptocurrency products, privacy, information security, anti-money laundering and sanctions regimes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sector": "Healthcare",
+      "takeaways": [
+        {
+          "title": "Orthopaedics separation",
+          "what_changed": "Johnson & Johnson added risk factors on its announced intention to separate its Orthopaedics business. They cover significant expenses and benefits based on assumptions that may prove incorrect.",
+          "audit_consideration": "Does the plan address separation cost tracking and control implications of the carve-out?",
+          "evidence": [
+            {
+              "ticker": "JNJ",
+              "accession": "0000200406-26-000016",
+              "item": "1A",
+              "report_date": "2025-12-28",
+              "change": "added",
+              "quote": "In October 2025, the Company announced its intention to separate the Company's Orthopaedics business."
+            },
+            {
+              "ticker": "JNJ",
+              "accession": "0000200406-26-000016",
+              "item": "1A",
+              "report_date": "2025-12-28",
+              "change": "added",
+              "quote": "The Company will incur significant expenses in connection with the planned separation."
+            }
+          ]
+        },
+        {
+          "title": "UnitedHealth AI use and regulation",
+          "what_changed": "UnitedHealth added a stand-alone risk factor on its increasing use of AI. Its regulatory discussion was rewritten to say AI technologies are subject to evolving and uncertain laws.",
+          "audit_consideration": "Does the plan cover inventory and monitoring of AI systems and tracking of changing AI laws?",
+          "evidence": [
+            {
+              "ticker": "UNH",
+              "accession": "0000731766-26-000062",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "added",
+              "quote": "Our increasing use of AI presents legal, regulatory and business risks to our operations, reputation and financial results."
+            },
+            {
+              "ticker": "UNH",
+              "accession": "0000731766-26-000062",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "AI technologies are subject to evolving and uncertain U.S. federal, state, and international laws and regulations."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sector": "Energy",
+      "takeaways": [
+        {
+          "title": "Hess integration and Hess Midstream",
+          "what_changed": "Chevron rewrote its Hess risk to say the acquisition closed in July 2025 and benefits must now be realized. It also added a risk on claims tied to its subsidiary's role as general partner of Hess Midstream.",
+          "audit_consideration": "Does the plan cover tracking of synergy targets and monitoring of conflict-of-interest duties to Hess Midstream?",
+          "evidence": [
+            {
+              "ticker": "CVX",
+              "accession": "0000093410-26-000078",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "The success of the acquisition of Hess, which closed in July 2025, will depend, in part, on Chevron’s ability to realize the anticipated benefits, including the anticipated run-rate cost synergies, estimated five-year production and free cash flow growth rates, and anticipated higher returns to shareholders over the long-term."
+            },
+            {
+              "ticker": "CVX",
+              "accession": "0000093410-26-000078",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "added",
+              "quote": "One of our subsidiaries acts as the general partner of Hess Midstream, a publicly traded limited partnership. Our control of the general partner of Hess Midstream may increase the possibility that we could be subject to claims of breach of duties owed to Hess Midstream, including claims of conflict of interest."
+            }
+          ]
+        },
+        {
+          "title": "Supply, demand and geopolitical language",
+          "what_changed": "Exxon Mobil expanded its supply language to cover government policies that could raise supply levels, and widened its country-risk language to cover regime changes. Chevron added a reference to current geopolitical tensions in Venezuela.",
+          "audit_consideration": "Does the plan test how country-level political and policy developments are escalated into planning and tax positions?",
+          "evidence": [
+            {
+              "ticker": "XOM",
+              "accession": "0000034088-26-000045",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "There also may be new or emerging factors that could increase global oil, gas, and petrochemical supply levels in the short or long term, such as government policies and actions intended to boost or expand development of domestic or foreign oil and gas reserves or accelerate the pace of production reaching markets"
+            },
+            {
+              "ticker": "XOM",
+              "accession": "0000034088-26-000045",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "Some countries in which we do, or seek to do, business lack well-developed legal systems, lack political or governmental stability, may be subject to regime changes"
+            },
+            {
+              "ticker": "CVX",
+              "accession": "0000093410-26-000078",
+              "item": "1A",
+              "report_date": "2025-12-31",
+              "change": "changed",
+              "quote": "political events such as current geopolitical tensions in Venezuela"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

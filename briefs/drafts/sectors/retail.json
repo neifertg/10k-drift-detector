@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "kind": "sector",
+  "sector": "Retail",
+  "model": "claude-sonnet-5-5",
+  "prompt_file": "sector_brief.md",
+  "input_generated_at": "2026-11-13 03:32 UTC",
+  "divergence": {
+    "text": "Both companies' later filings add AI-related exposure, but Costco Wholesale Corporation frames it around autonomous third-party AI systems that could bypass internal controls and around AI changing member shopping habits. Walmart Inc. instead adds language on tariff effects it says it experienced and on cryptocurrency and equity investment products offered through its fintech venture, which Costco's passages do not show.",
+    "evidence": [
+      {
+        "ticker": "COST",
+        "accession": "0000909832-26-000093",
+        "item": "1A",
+        "report_date": "2026-08-30",
+        "change": "changed",
+        "quote": "There is a risk that these autonomous systems could bypass internal controls, lack adequate third-party governance, or result in unauthorized access to data, data leakage, and non-compliance with applicable data privacy laws."
+      },
+      {
+        "ticker": "WMT",
+        "accession": "0000104169-26-000055",
+        "item": "1A",
+        "report_date": "2026-01-31",
+        "change": "changed",
+        "quote": "We experienced the impacts noted above during fiscal 2026 as a result of incremental import tariffs."
+      },
+      {
+        "ticker": "WMT",
+        "accession": "0000104169-26-000055",
+        "item": "1A",
+        "report_date": "2026-01-31",
+        "change": "changed",
+        "quote": "limited access to cryptocurrency and equity investment products, installment lending and earned wage access"
+      }
+    ]
+  },
+  "themes": [
+    {
+      "title": "AI in shopping and competition",
+      "what_changed": "Both later filings expand competitive risk to cover AI-driven shopping tools. Costco Wholesale Corporation says AI tools may change consumer shopping habits and may present inaccurate pricing, while Walmart Inc. adds emerging agentic shopping tools and AI-enabled platforms to its strategy and competition risks.",
+      "audit_consideration": "How does the plan test whether the accuracy of product and pricing data exposed to AI-enabled shopping channels is monitored, given that Costco Wholesale Corporation and Walmart Inc. both now describe this exposure?",
+      "evidence": [
+        {
+          "ticker": "COST",
+          "accession": "0000909832-26-000093",
+          "item": "1A",
+          "report_date": "2026-08-30",
+          "change": "changed",
+          "quote": "AI may also present inaccurate pricing or product data, or fail to capture the full value of our membership offering, impacting member purchasing decisions by prioritizing immediate or inaccurate price comparison or logistics over member loyalty."
+        },
+        {
+          "ticker": "WMT",
+          "accession": "0000104169-26-000055",
+          "item": "1A",
+          "report_date": "2026-01-31",
+          "change": "changed",
+          "quote": "Customers are using digital means, including websites, captive and third-party digital applications, social media, and emerging agentic platforms to shop with us and our competitors"
+        }
+      ]
+    },
+    {
+      "title": "AI governance and cybersecurity",
+      "what_changed": "Costco Wholesale Corporation added language on autonomous third-party AI systems and on AI accelerating the scale of cybersecurity threats. Walmart Inc. added references to flawed AI search and discovery results among the incidents that could erode customer trust.",
+      "audit_consideration": "Does the plan cover third-party AI governance, data-leakage monitoring, and detection timelines for AI-accelerated attacks?",
+      "evidence": [
+        {
+          "ticker": "COST",
+          "accession": "0000909832-26-000093",
+          "item": "1A",
+          "report_date": "2026-08-30",
+          "change": "changed",
+          "quote": "The rapid evolution of AI has automated and accelerated the scale of cybersecurity threats, potentially reducing the time for us to detect and mitigate potential information security incidents."
+        },
+        {
+          "ticker": "WMT",
+          "accession": "0000104169-26-000055",
+          "item": "1A",
+          "report_date": "2026-01-31",
+          "change": "changed",
+          "quote": "ineffective use or misuse of AI technologies, inaccurate, biased or otherwise flawed AI search and discovery results, or a data breach as a result of a cyberattack could quickly erode trust and confidence in our business"
+        }
+      ]
+    },
+    {
+      "title": "Tariff and trade cost pass-through",
+      "what_changed": "Walmart Inc. rewrote its trade risk to say tariffs have affected its business and profit margins and that it expects the tariff environment to continue. The language now ties the impact to purchasing costs, selling prices, and the cost of strategic initiatives.",
+      "audit_consideration": "Does the plan examine how tariff cost changes flow into inventory costing, pricing, and margin reporting?",
+      "evidence": [
+        {
+          "ticker": "WMT",
+          "accession": "0000104169-26-000055",
+          "item": "1A",
+          "report_date": "2026-01-31",
+          "change": "changed",
+          "quote": "We expect the dynamic tariff environment to continue, including in fiscal 2027, and cannot predict with certainty the future impact that this environment will have on our results of operations or financial performance, which could be material."
+        }
+      ]
+    },
+    {
+      "title": "Financial services and product-liability exposure",
+      "what_changed": "Walmart Inc. added cryptocurrency and equity investment products to its fintech offerings and added compliance language on the sale and custody of those products. Its litigation risk also now cites novel personal injury and economic loss theories tied to consumer products.",
+      "audit_consideration": "Does the plan assess compliance coverage for newly offered crypto and equity products and the legal-reserve process for novel product claims?",
+      "evidence": [
+        {
+          "ticker": "WMT",
+          "accession": "0000104169-26-000055",
+          "item": "1A",
+          "report_date": "2026-01-31",
+          "change": "changed",
+          "quote": "the sale and custody of equity and cryptocurrency products, privacy, information security, anti-money laundering and sanctions regimes"
+        },
+        {
+          "ticker": "WMT",
+          "accession": "0000104169-26-000055",
+          "item": "1A",
+          "report_date": "2026-01-31",
+          "change": "unclassified",
+          "quote": "we are increasingly named as a defendant in cases that allege novel theories of personal injury or economic loss from consumer products"
+        }
+      ]
+    }
+  ]
+}

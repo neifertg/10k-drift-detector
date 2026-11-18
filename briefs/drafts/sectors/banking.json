@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "kind": "sector",
+  "sector": "Banking",
+  "model": "claude-sonnet-5-5",
+  "prompt_file": "sector_brief.md",
+  "input_generated_at": "2026-11-13 03:32 UTC",
+  "divergence": {
+    "text": "JPMorgan Chase & Co. added standalone risk factors in its latest filing, including one on advanced technologies such as AI and one on interconnectedness with external parties, while Bank of America Corporation's passages show rewrites of existing risks and no standalone additions. Bank of America Corporation expanded existing language, such as its cybersecurity discussion of clients and third parties and its capital discussion of a scheduled G-SIB surcharge increase, rather than adding new headings.",
+    "evidence": [
+      {
+        "ticker": "JPM",
+        "accession": "0001628280-26-008131",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "added",
+        "quote": "JPMorganChase’s operations, results, and competitive standing could be adversely affected by the development of advanced technologies such as AI."
+      },
+      {
+        "ticker": "JPM",
+        "accession": "0001628280-26-008131",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "added",
+        "quote": "JPMorganChase’s interconnectedness with clients, customers and other external parties could be a source of significant operational risk."
+      },
+      {
+        "ticker": "BAC",
+        "accession": "0000070858-26-000157",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "changed",
+        "quote": "For example, our G-SIB surcharge is expected to increase to 3.5 percent from 3.0 percent in 2027, and could increase further in the future."
+      }
+    ]
+  },
+  "themes": [
+    {
+      "title": "AI and emerging technology",
+      "what_changed": "JPMorgan Chase & Co.'s later filing added a risk factor on generative and agentic AI, covering system failures, biased output, intensified cyber threats and regulatory challenges. Its competition risk factor also now names stablecoins and tokenized securities, and Bank of America Corporation's strategy risk factor now refers to the nonbank digital asset ecosystem.",
+      "audit_consideration": "Is there an inventory of AI and digital-asset uses, with defined controls over testing, data access and model oversight, that the audit plan can map to these disclosed exposures?",
+      "evidence": [
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "The rapid development and deployment of advanced technologies, including generative and agentic AI systems, present a range of risks to JPMorganChase’s businesses and operations"
+        },
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "including the further development of the nonbank digital asset ecosystem (e.g., related to nonbank stablecoins or digital asset trading)"
+        }
+      ]
+    },
+    {
+      "title": "Third-party and interconnected operational risk",
+      "what_changed": "JPMorgan Chase & Co. added a risk factor stating that its growing interconnectivity with clients and external parties increases the risk of failures or cyber attacks on those parties' systems. Bank of America Corporation rewrote its cybersecurity language to list a broad set of clients and third parties on whom it relies or who hold client data.",
+      "audit_consideration": "Does the plan test how the bank monitors and responds to failures or attacks at customers, vendors and market infrastructures that sit outside its own security perimeter?",
+      "evidence": [
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "JPMorganChase’s interconnectivity with clients, customers and other external parties continues to expand, which increases the risk of failure or cyber attacks with respect to the systems of those parties."
+        },
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "Our cybersecurity risk and exposure remains heightened, including because of our prominent size and scale, high-profile brand, global presence and role in the financial services industry and the broader economy."
+        }
+      ]
+    },
+    {
+      "title": "Executive branch actions and regulatory scope",
+      "what_changed": "Bank of America Corporation's later filing now refers to Executive Branch Actions alongside laws, rules and regulations as a source of cost and business restrictions. JPMorgan Chase & Co. likewise added executive branch actions to its summary of legal and regulatory risks.",
+      "audit_consideration": "How does the compliance change-management process capture and assess executive-branch directives that are not formal rulemaking?",
+      "evidence": [
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "We operate in a highly regulated industry and are subject to evolving and comprehensive federal, state and foreign LRRs and Executive Branch Actions."
+        },
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "as well as changes to or in the application, interpretation or enforcement of applicable law or executive branch actions"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "model": "claude-sonnet-5-5",
+  "requests": [
+    {
+      "label": "Banking",
+      "attempt": 1,
+      "model": "claude-sonnet-5-5",
+      "input_tokens": 85530,
+      "output_tokens": 1961,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "label": "Payments",
+      "attempt": 1,
+      "model": "claude-sonnet-5-5",
+      "input_tokens": 45469,
+      "output_tokens": 1932,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "label": "Technology",
+      "attempt": 1,
+      "model": "claude-sonnet-5-5",
+      "input_tokens": 51604,
+      "output_tokens": 1969,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "label": "Retail",
+      "attempt": 1,
+      "model": "claude-sonnet-5-5",
+      "input_tokens": 31670,
+      "output_tokens": 2255,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "label": "Healthcare",
+      "attempt": 1,
+      "model": "claude-sonnet-5-5",
+      "input_tokens": 24857,
+      "output_tokens": 1729,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "label": "Energy",
+      "attempt": 1,
+      "model": "claude-sonnet-5-5",
+      "input_tokens": 31102,
+      "output_tokens": 1992,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "label": "overview",
+      "attempt": 1,
+      "model": "claude-sonnet-5-5",
+      "input_tokens": 13087,
+      "output_tokens": 6724,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    }
+  ]
+}
