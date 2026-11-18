@@ -26,6 +26,19 @@ def e(value: object) -> str:
     return html.escape("" if value is None else str(value), quote=True)
 
 
+class _Glossary:
+    """Expand the first G-SIB in prose on a page. Quotes are not passed through it."""
+
+    def __init__(self) -> None:
+        self._expanded = False
+
+    def prose(self, text: str) -> str:
+        if not self._expanded and "G-SIB" in text:
+            text = text.replace("G-SIB", "global systemically important bank (G-SIB)", 1)
+            self._expanded = True
+        return e(text)
+
+
 def _page(title: str, body: str, depth: int) -> str:
     prefix = "../" * depth
     crumb = ""
@@ -368,7 +381,7 @@ def peer_page(
         f"<p><a href=\"../company/{e(left.ticker.lower())}.html\">{e(left.display_name)}</a> "
         f"and <a href=\"../company/{e(right.ticker.lower())}.html\">{e(right.display_name)}</a>.</p>",
         f"<p>{e(peer.period_statement)}</p>",
-        _sector_status(sector_brief, brief_errors, depth=1),
+        _sector_status(sector_brief, brief_errors, depth=1, glossary=_Glossary()),
         "</div>",
         "<details><summary>Passage-level comparison</summary>",
     ]
@@ -470,6 +483,7 @@ def index_page(
         "Three latest 10-Ks per company where EDGAR has them. "
         "10-K/A amendments are named and not diffed.</p>",
     ]
+    glossary = _Glossary()
     if brief_errors:
         parts.append(_failure_notice(brief_errors))
     elif briefs is None or (not briefs.overview and not briefs.sectors):
@@ -477,7 +491,7 @@ def index_page(
     else:
         if briefs.overview:
             parts.append("<h2>Across the peer set</h2>")
-            parts.append(_theme_list(briefs.overview, by_ticker, depth=0))
+            parts.append(_theme_list(briefs.overview, by_ticker, depth=0, glossary=glossary))
         else:
             parts.append("<p>No cross-sector theme was supported by the verified drafts.</p>")
     if model_summary:
@@ -500,7 +514,7 @@ def index_page(
             parts.append(f"<p>{links}.</p>")
         takeaways = briefs.takeaways.get(peer.sector) if briefs else None
         if takeaways:
-            parts.append(_theme_list(takeaways, by_ticker, depth=0))
+            parts.append(_theme_list(takeaways, by_ticker, depth=0, glossary=glossary))
             parts.append(f'<p class="src"><a href="{brief_href}">Full {e(peer.sector)} brief</a>.</p>')
         else:
             parts.append(f'<p class="src"><a href="{brief_href}">Sector brief</a>.</p>')
@@ -547,7 +561,7 @@ def _failure_notice(errors: list[str]) -> str:
     )
 
 
-def _sector_status(brief, brief_errors: list[str] | None, *, depth: int) -> str:
+def _sector_status(brief, brief_errors: list[str] | None, *, depth: int, glossary: _Glossary | None = None) -> str:
     if brief_errors:
         return _failure_notice(brief_errors)
     if brief is None:
@@ -558,14 +572,15 @@ def _sector_status(brief, brief_errors: list[str] | None, *, depth: int) -> str:
             "checked against the stored filing extract. The passage-level comparison is below.</p>"
             "</section>"
         )
+    words = glossary or _Glossary()
     parts = []
     if brief.divergence:
         parts.append("<h2>Where the peers diverge</h2>")
-        parts.append(f"<p>{e(brief.divergence)}</p>")
+        parts.append(f"<p>{words.prose(brief.divergence)}</p>")
         parts.append(_evidence_details(brief.divergence_evidence, depth))
     if brief.themes:
         parts.append("<h2>Emerging or growing risks</h2>")
-        parts.append(_theme_list(brief.themes, {}, depth=depth))
+        parts.append(_theme_list(brief.themes, {}, depth=depth, glossary=words))
     elif not brief.divergence:
         parts.append("<p>The verified draft has no theme and no divergence note.</p>")
     else:
@@ -573,7 +588,14 @@ def _sector_status(brief, brief_errors: list[str] | None, *, depth: int) -> str:
     return "\n".join(parts)
 
 
-def _theme_list(themes: list[Theme], by_ticker: dict[str, CompanyResult], *, depth: int) -> str:
+def _theme_list(
+    themes: list[Theme],
+    by_ticker: dict[str, CompanyResult],
+    *,
+    depth: int,
+    glossary: _Glossary | None = None,
+) -> str:
+    words = glossary or _Glossary()
     blocks = []
     seen_slugs: dict[str, int] = {}
     for theme in themes:
@@ -584,10 +606,10 @@ def _theme_list(themes: list[Theme], by_ticker: dict[str, CompanyResult], *, dep
         who = _company_line(theme, by_ticker, depth)
         blocks.append(
             f'<article class="theme" id="theme-{e(slug)}">'
-            f"<h3>{e(theme.title)}</h3>"
+            f"<h3>{words.prose(theme.title)}</h3>"
             f"{who}"
-            f"<p>{e(theme.what_changed)}</p>"
-            f'<p class="audit"><span class="tag">Audit plan</span> {e(theme.audit_consideration)}</p>'
+            f"<p>{words.prose(theme.what_changed)}</p>"
+            f'<p class="audit"><span class="tag">Audit plan</span> {words.prose(theme.audit_consideration)}</p>'
             f"{_evidence_details(theme.evidence, depth)}"
             "</article>"
         )

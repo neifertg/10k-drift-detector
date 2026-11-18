@@ -47,6 +47,39 @@ def test_verified_fixture_renders_the_overview_and_the_sector_brief(tmp_path):
     assert "<script>" not in index
 
 
+def test_first_gsib_in_prose_is_expanded_and_the_quote_is_not():
+    from drift_detector.report import _Glossary, _theme_list
+    from drift_detector.verify import Evidence, Theme
+
+    quote = (
+        "For example, our G-SIB surcharge is expected to increase to 3.5 percent "
+        "from 3.0 percent in 2027, and could increase further in the future."
+    )
+    theme = Theme(
+        title="Interconnectedness and G-SIB surcharge",
+        what_changed="Bank of America expanded its G-SIB surcharge language. The later filing states the figure.",
+        audit_consideration="Ask how the G-SIB surcharge is calculated.",
+        evidence=[
+            Evidence(
+                ticker="BAC",
+                company_name="Bank of America Corporation",
+                accession="0000070858-26-000157",
+                item="1A",
+                report_date="2025-12-31",
+                change="changed",
+                quote=quote,
+                document_url="https://www.sec.gov/example",
+                passage_url="https://www.sec.gov/example",
+            )
+        ],
+    )
+    html = _theme_list([theme], {}, depth=0, glossary=_Glossary())
+    assert html.count("global systemically important bank (G-SIB)") == 1
+    assert "Interconnectedness and global systemically important bank (G-SIB) surcharge" in html
+    assert quote in html
+    assert "global systemically important bank (G-SIB) surcharge is expected" not in html
+
+
 def test_plain_change_hides_the_matcher_label():
     assert plain_change("unclassified") == "Reworded"
     assert plain_change("already_paired") == "Reworded"
