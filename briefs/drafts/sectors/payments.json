@@ -6,7 +6,7 @@
   "prompt_file": "sector_brief.md",
   "input_generated_at": "2026-11-13 03:32 UTC",
   "divergence": {
-    "text": "Visa Inc. added new language in its latest filing on Brazil settlement-loss regulation and on AI-driven competition and model risk, which goes beyond the changes in Mastercard Incorporated's passages. Mastercard Incorporated's latest changes also include Brazil settlement responsibility, but its other edits are mostly smaller additions on AI-enabled threat actors, trade policy and Recorded Future, and the periods compared are not the same.",
+    "text": "Visa Inc.'s later filing says Central Bank of Brazil rules would obligate it to absorb certain settlement-related losses. Mastercard Incorporated's later filing says Brazil requires payment system operators, including Mastercard and Visa, to extend responsibility for the financial and settlement integrity of payments to merchants.",
     "evidence": [
       {
         "ticker": "V",
@@ -29,9 +29,17 @@
   "themes": [
     {
       "title": "Settlement exposure from Brazil regulation",
-      "what_changed": "Both companies' later filings added language on Brazilian rules that push payment networks to absorb settlement-related losses. Visa Inc. also said it has submitted enhanced operating rule provisions that are expected to increase its settlement exposure and collateral requirements.",
-      "audit_consideration": "Does the audit plan cover how settlement exposure and collateral requirements are measured and monitored for newly regulated markets such as Brazil, as described by Visa Inc. and Mastercard Incorporated?",
+      "what_changed": "Visa Inc.'s later filing says Central Bank of Brazil rules would obligate it to absorb certain settlement-related losses, and that submitted rule provisions are expected to raise its settlement exposure. Mastercard Incorporated's later filing says Brazil requires payment system operators to extend their responsibility for the financial and settlement integrity of payments to merchants.",
+      "audit_consideration": "Does the audit plan cover the settlement-loss and settlement-integrity responsibilities the two filings describe for Brazil?",
       "evidence": [
+        {
+          "ticker": "V",
+          "accession": "0001403161-26-000134",
+          "item": "1A",
+          "report_date": "2026-09-30",
+          "change": "changed",
+          "quote": "the Central Bank of Brazil has adopted regulations applicable to payment networks like Visa that impose enhanced prudential requirements, including requirements that would obligate Visa to absorb certain settlement related losses for certain transactions involving sellers in Brazil when settlement failures occur and our risk mitigation measures do not fully protect against the resulting exposure."
+        },
         {
           "ticker": "V",
           "accession": "0001403161-26-000134",
@@ -46,13 +54,13 @@
           "item": "1A",
           "report_date": "2025-12-31",
           "change": "changed",
-          "quote": "As we continue to be subject to increased regulation across the globe, more jurisdictions may enact similar approaches from time to time."
+          "quote": "Brazil recently enacted regulation requiring PSOs in Brazil (including Mastercard and Visa) to extend their responsibility for the financial and settlement integrity of payments to merchants."
         }
       ]
     },
     {
       "title": "AI as a security and competitive risk",
-      "what_changed": "Mastercard Incorporated's later filing says the widespread use of AI is enhancing the frequency and effectiveness of threat actors. Visa Inc.'s later filing added AI-related competitive pressure and risks from third-party large language models it does not control.",
+      "what_changed": "Mastercard Incorporated's later filing says the widespread use of AI is enhancing the frequency and effectiveness of threat actors. Visa Inc.'s later filing added that its use of AI depends in part on third-party large language models it does not control, and reworded existing language that AI intensifies competitive pressure.",
       "audit_consideration": "Should the plan test how AI use, including reliance on third-party models, is governed and how AI-enabled attack scenarios feed into security and resilience monitoring at Visa Inc. and Mastercard Incorporated?",
       "evidence": [
         {
@@ -70,13 +78,21 @@
           "report_date": "2026-09-30",
           "change": "changed",
           "quote": "Our and our partners’ use of AI depends in part on third-party large language models that we do not control, whose models may generate inaccurate, biased, hallucinated or unexpected outputs that conflict with our business objectives or brand standards."
+        },
+        {
+          "ticker": "V",
+          "accession": "0001403161-26-000134",
+          "item": "1A",
+          "report_date": "2026-09-30",
+          "change": "reworded",
+          "quote": "The rapid advancement of AI, including GenAI and agentic AI, intensifies competitive pressure in two key ways: first, competitors may use AI to enhance customer experiences, accelerate innovation, improve personalization, and create new payment and commerce experiences that drive adoption; and second, competitors may deploy AI internally to improve productivity, automate workflows, reduce costs and accelerate product development, potentially creating structural efficiency advantages."
         }
       ]
     },
     {
       "title": "Expanded regulatory and licensing scope",
-      "what_changed": "Visa Inc.'s later filing says new payment technologies and growth-strategy capabilities may bring increased licensing, supervisory and compliance obligations. Its cybersecurity law passage adds incident reporting and control requirements as it enters new markets.",
-      "audit_consideration": "Does the plan assess whether licensing, supervisory and cyber incident-reporting obligations are tracked for new products and markets at Visa Inc.?",
+      "what_changed": "Visa Inc.'s later filing says certain payment technologies and new capabilities in its growth strategy may bring increased licensing, supervisory and compliance obligations. Its cybersecurity discussion restates that these laws often impose control, governance, and incident-reporting obligations.",
+      "audit_consideration": "Does the plan assess whether the licensing, supervisory, and incident-reporting obligations described in the filing are tracked?",
       "evidence": [
         {
           "ticker": "V",
@@ -91,7 +107,7 @@
           "accession": "0001403161-26-000134",
           "item": "1A",
           "report_date": "2026-09-30",
-          "change": "unclassified",
+          "change": "reworded",
           "quote": "These laws and regulations often impose both specific cybersecurity control and governance requirements as well as incident reporting obligations."
         }
       ]

@@ -99,8 +99,16 @@
     {
       "title": "Financial services and product-liability exposure",
       "what_changed": "Walmart Inc. added cryptocurrency and equity investment products to its fintech offerings and added compliance language on the sale and custody of those products. Its litigation risk also now cites novel personal injury and economic loss theories tied to consumer products.",
-      "audit_consideration": "Does the plan assess compliance coverage for newly offered crypto and equity products and the legal-reserve process for novel product claims?",
+      "audit_consideration": "Does the plan assess compliance coverage for the crypto and equity products the filing describes, and the legal-reserve process for the novel product claims it names?",
       "evidence": [
+        {
+          "ticker": "WMT",
+          "accession": "0000104169-26-000055",
+          "item": "1A",
+          "report_date": "2026-01-31",
+          "change": "changed",
+          "quote": "limited access to cryptocurrency and equity investment products, installment lending and earned wage access"
+        },
         {
           "ticker": "WMT",
           "accession": "0000104169-26-000055",

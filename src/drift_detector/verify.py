@@ -26,7 +26,16 @@ MAX_THEMES_SECTOR = 4
 MAX_TAKEAWAYS = 2
 MAX_EVIDENCE = 4
 MAX_EVIDENCE_OVERVIEW = 6
-CHANGE_LABELS = {"added", "removed", "changed", "unclassified", "already_paired", "9a"}
+CHANGE_LABELS = {
+    "added",
+    "removed",
+    "changed",
+    "unclassified",
+    "already_paired",
+    "9a",
+    "reworded",
+    "moved",
+}
 SCHEMA_VERSION = 1
 OVERVIEW_SCHEMA_VERSION = 2
 _LEGAL_SUFFIXES = tuple(
@@ -520,6 +529,15 @@ def _change_blob(company: CompanyResult, accession: str, item: str, change: str)
             for quote in flag.quotes:
                 if quote.accession == accession and quote.item == item and quote.text:
                     parts.append(quote.text)
+        return "\n".join(parts)
+    # A sentence the prior filing already had can sit in an added or uncertain
+    # passage. "reworded" and "moved" may cite any stored row for this accession.
+    if change in {"reworded", "moved"}:
+        for row in comparison.rows:
+            if row.prior_accession == accession and row.prior_text:
+                parts.append(row.prior_text)
+            if row.current_accession == accession and row.current_text:
+                parts.append(row.current_text)
         return "\n".join(parts)
     row_kind = _ROW_KIND.get(change)
     if row_kind is None:

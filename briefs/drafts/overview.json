@@ -32,7 +32,15 @@
           "item": "1A",
           "report_date": "2026-06-30",
           "change": "added",
-          "quote": "Our ability to fund these investments depends on our ability to generate sufficient cash flows and obtain financing on acceptable terms."
+          "quote": "We have made and are continuing to make significant capital and operational investments to develop, train, deploy, and support AI models and related cloud-based services, including building and expanding datacenters, acquiring necessary components, and securing energy resources."
+        },
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "added",
+          "quote": "These investments are being made at significant scale and on an accelerated timeline, require substantial and increasing capital expenditures and continued access to capital, and are in advance of fully developed revenue streams."
         },
         {
           "ticker": "COST",
@@ -46,8 +54,8 @@
     },
     {
       "title": "AI-enabled cyber threats and third-party exposure",
-      "what_changed": "Mastercard said the widespread use of AI is enhancing the frequency and effectiveness of threat actors, and Costco said AI has automated and accelerated the scale of cybersecurity threats. JPMorgan Chase added that growing interconnectivity with external parties raises the risk of failure or cyber attacks on their systems.",
-      "audit_consideration": "Does the plan test detection and response for AI-accelerated attacks, including those that originate at clients, suppliers and other parties outside the company's own security perimeter?",
+      "what_changed": "Mastercard said the widespread use of AI is enhancing the frequency and effectiveness of threat actors, and Costco said AI has automated and accelerated the scale of cybersecurity threats. Apple says the spread of artificial intelligence significantly increases cybersecurity attack risks, Bank of America added a sentence on nation-state cyberattacks that use emerging technologies such as AI, and Microsoft describes AI-assisted techniques used to induce employees, partners, and suppliers to disclose sensitive information.",
+      "audit_consideration": "Does the plan test detection of AI-accelerated attacks, including AI-assisted social engineering and attacks that use emerging technologies such as AI against the company and its third parties?",
       "evidence": [
         {
           "ticker": "MA",
@@ -66,18 +74,34 @@
           "quote": "The rapid evolution of AI has automated and accelerated the scale of cybersecurity threats, potentially reducing the time for us to detect and mitigate potential information security incidents."
         },
         {
-          "ticker": "JPM",
-          "accession": "0001628280-26-008131",
+          "ticker": "AAPL",
+          "accession": "0000320193-26-000026",
+          "item": "1A",
+          "report_date": "2026-09-26",
+          "change": "changed",
+          "quote": "The rapid advancement and widespread dissemination of artificial intelligence technologies significantly increases the risks associated with cybersecurity attacks."
+        },
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "changed",
+          "quote": "using social engineering and AI-assisted techniques to induce our employees, users, partners, suppliers, or customers to disclose sensitive information"
+        },
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
           "item": "1A",
           "report_date": "2025-12-31",
-          "change": "added",
-          "quote": "JPMorganChase’s interconnectivity with clients, customers and other external parties continues to expand, which increases the risk of failure or cyber attacks with respect to the systems of those parties."
+          "change": "changed",
+          "quote": "Also, the use of cyberattacks or campaigns, cyberespionage or other unauthorized access to networks and systems by nation states or their proxies, including utilizing emerging technologies such as AI, has increased and threatens our and our third parties’ operations and information systems, and the financial systems and infrastructure upon which we rely."
         }
       ]
     },
     {
       "title": "Regulatory scope and executive action",
-      "what_changed": "Bank of America now refers to Executive Branch Actions alongside laws, rules and regulations, and JPMorgan Chase added executive branch actions to its legal and regulatory risk language. Visa said new payment technologies and growth-strategy capabilities may bring increased licensing, supervisory and compliance obligations.",
+      "what_changed": "Bank of America now refers to Executive Branch Actions alongside laws, rules and regulations, and JPMorgan Chase added executive branch actions to its legal and regulatory risk language. Visa said certain payment technologies and new growth-strategy capabilities may bring increased licensing, supervisory and compliance obligations.",
       "audit_consideration": "How does compliance change management capture and assess executive directives and expanding licensing and supervisory obligations that fall outside formal rulemaking?",
       "evidence": [
         {
@@ -143,17 +167,17 @@
       "sector": "Banking",
       "takeaways": [
         {
-          "title": "Interconnectedness and G-SIB surcharge",
-          "what_changed": "JPMorgan Chase added a standalone risk factor on interconnectedness with clients, customers and other external parties as a source of operational risk. Bank of America expanded its capital discussion to say its G-SIB surcharge is expected to rise to 3.5 percent in 2027.",
-          "audit_consideration": "Does the plan test third-party operational monitoring and the capital planning process for the scheduled surcharge increase?",
+          "title": "Interconnectedness with outside parties",
+          "what_changed": "JPMorgan Chase moved an existing interconnectivity sentence under a new heading on interconnectedness with external parties. Bank of America's later filing adds a sentence on nation-state cyberattacks that use emerging technologies such as AI and that threaten its third parties' operations.",
+          "audit_consideration": "Does the plan test monitoring of operational risk and cyberattacks at outside parties the filings name?",
           "evidence": [
             {
               "ticker": "JPM",
               "accession": "0001628280-26-008131",
               "item": "1A",
               "report_date": "2025-12-31",
-              "change": "added",
-              "quote": "JPMorganChase’s interconnectedness with clients, customers and other external parties could be a source of significant operational risk."
+              "change": "moved",
+              "quote": "JPMorganChase’s interconnectivity with clients, customers and other external parties continues to expand, which increases the risk of failure or cyber attacks with respect to the systems of those parties."
             },
             {
               "ticker": "BAC",
@@ -161,13 +185,13 @@
               "item": "1A",
               "report_date": "2025-12-31",
               "change": "changed",
-              "quote": "For example, our G-SIB surcharge is expected to increase to 3.5 percent from 3.0 percent in 2027, and could increase further in the future."
+              "quote": "Also, the use of cyberattacks or campaigns, cyberespionage or other unauthorized access to networks and systems by nation states or their proxies, including utilizing emerging technologies such as AI, has increased and threatens our and our third parties’ operations and information systems, and the financial systems and infrastructure upon which we rely."
             }
           ]
         },
         {
           "title": "Digital assets and stablecoins",
-          "what_changed": "Bank of America's strategy risk factor now refers to the nonbank digital asset ecosystem, including nonbank stablecoins. JPMorgan Chase added AI and advanced technology risk alongside this competitive shift.",
+          "what_changed": "Bank of America's strategy risk factor now refers to the nonbank digital asset ecosystem, including nonbank stablecoins. JPMorgan Chase's later filing says the development of advanced technologies such as AI could affect its operations, results, and competitive standing.",
           "audit_consideration": "Does the plan assess how strategic exposure to digital asset competitors is monitored and reported?",
           "evidence": [
             {
@@ -226,7 +250,7 @@
         },
         {
           "title": "Third-party language models",
-          "what_changed": "Visa's later filing added that its use of AI depends in part on third-party large language models it does not control. Those models may generate inaccurate, biased or unexpected outputs.",
+          "what_changed": "This takeaway is from Visa's filing only. Visa's later filing added that its use of AI depends in part on third-party large language models it does not control, and that those models may generate inaccurate, biased, or unexpected outputs.",
           "audit_consideration": "Should the plan test governance over reliance on third-party models?",
           "evidence": [
             {
@@ -270,7 +294,7 @@
         {
           "title": "Autonomous agents and AI capital spending",
           "what_changed": "Apple's added AI risk factor lists unintended actions by autonomous or agentic systems and misuse by personnel. Microsoft added that its investments require substantial capital ahead of fully developed revenue streams.",
-          "audit_consideration": "Does the plan cover agent access controls and approval of capital commitments against expected returns?",
+          "audit_consideration": "Does the plan cover governance of autonomous or agentic systems and approval of capital commitments made ahead of fully developed revenue?",
           "evidence": [
             {
               "ticker": "AAPL",
@@ -297,7 +321,7 @@
       "takeaways": [
         {
           "title": "Tariff effects at Walmart",
-          "what_changed": "Walmart rewrote its trade risk to say it experienced the impacts of incremental import tariffs during fiscal 2026. It also says it expects the tariff environment to continue in fiscal 2027.",
+          "what_changed": "This takeaway is from Walmart's filing only. Walmart rewrote its trade risk to say it experienced the impacts of incremental import tariffs during fiscal 2026 and expects the tariff environment to continue in fiscal 2027.",
           "audit_consideration": "Does the plan examine how tariff costs flow into inventory costing, pricing and margin reporting?",
           "evidence": [
             {
@@ -320,8 +344,8 @@
         },
         {
           "title": "Walmart fintech and crypto products",
-          "what_changed": "Walmart's later filing added limited access to cryptocurrency and equity investment products through its fintech offerings. It also added compliance language on the sale and custody of those products.",
-          "audit_consideration": "Does the plan assess compliance coverage for newly offered crypto and equity products?",
+          "what_changed": "This takeaway is from Walmart's filing only. Walmart's later filing added limited access to cryptocurrency and equity investment products and compliance language on the sale and custody of those products.",
+          "audit_consideration": "Does the plan assess compliance coverage for the crypto and equity products the filing describes?",
           "evidence": [
             {
               "ticker": "WMT",
@@ -348,7 +372,7 @@
       "takeaways": [
         {
           "title": "Orthopaedics separation",
-          "what_changed": "Johnson & Johnson added risk factors on its announced intention to separate its Orthopaedics business. They cover significant expenses and benefits based on assumptions that may prove incorrect.",
+          "what_changed": "This takeaway is from Johnson & Johnson's filing only. Johnson & Johnson added risk factors on its announced intention to separate its Orthopaedics business and on the significant expenses of that separation.",
           "audit_consideration": "Does the plan address separation cost tracking and control implications of the carve-out?",
           "evidence": [
             {
@@ -371,7 +395,7 @@
         },
         {
           "title": "UnitedHealth AI use and regulation",
-          "what_changed": "UnitedHealth added a stand-alone risk factor on its increasing use of AI. Its regulatory discussion was rewritten to say AI technologies are subject to evolving and uncertain laws.",
+          "what_changed": "This takeaway is from UnitedHealth's filing only. UnitedHealth added a stand-alone risk factor on its increasing use of AI, and rewrote its regulatory discussion to say AI technologies are subject to evolving and uncertain laws.",
           "audit_consideration": "Does the plan cover inventory and monitoring of AI systems and tracking of changing AI laws?",
           "evidence": [
             {
@@ -399,7 +423,7 @@
       "takeaways": [
         {
           "title": "Hess integration and Hess Midstream",
-          "what_changed": "Chevron rewrote its Hess risk to say the acquisition closed in July 2025 and benefits must now be realized. It also added a risk on claims tied to its subsidiary's role as general partner of Hess Midstream.",
+          "what_changed": "This takeaway is from Chevron's filing only. Chevron rewrote its Hess risk to say the acquisition closed in July 2025 and benefits must now be realized, and added a risk on claims tied to its subsidiary's role as general partner of Hess Midstream.",
           "audit_consideration": "Does the plan cover tracking of synergy targets and monitoring of conflict-of-interest duties to Hess Midstream?",
           "evidence": [
             {
@@ -423,7 +447,7 @@
         {
           "title": "Supply, demand and geopolitical language",
           "what_changed": "Exxon Mobil expanded its supply language to cover government policies that could raise supply levels, and widened its country-risk language to cover regime changes. Chevron added a reference to current geopolitical tensions in Venezuela.",
-          "audit_consideration": "Does the plan test how country-level political and policy developments are escalated into planning and tax positions?",
+          "audit_consideration": "Does the plan test how country-level political and policy developments are escalated into planning?",
           "evidence": [
             {
               "ticker": "XOM",

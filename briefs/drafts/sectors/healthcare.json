@@ -52,7 +52,7 @@
     },
     {
       "title": "Planned business separation",
-      "what_changed": "Johnson & Johnson added a new group of risk factors about the planned separation of its Orthopaedics business, covering completion risk, significant costs and possible share price volatility. The text says completion is subject to conditions including regulatory approvals and that benefits rest on assumptions that may prove incorrect.",
+      "what_changed": "Johnson & Johnson added risk factors about the planned separation of its Orthopaedics business. The text says the company will incur significant expenses and that anticipated benefits rest on assumptions that may prove incorrect.",
       "audit_consideration": "Does the audit plan address separation-related cost tracking, governance over the transaction conditions, and the control implications of carving out a business?",
       "evidence": [
         {
@@ -75,7 +75,7 @@
     },
     {
       "title": "Third-party reliance and cybersecurity",
-      "what_changed": "Johnson & Johnson's later filing added increasing use of and reliance on third parties as a factor behind its information security risk, and widened the AI sentence to include other emerging technology. UnitedHealth Group Incorporated's acquisition risk factor also now says integration must be done comprehensively and expeditiously.",
+      "what_changed": "Johnson & Johnson's later filing added increasing use of and reliance on third parties as a factor behind its information security risk, and says the increasing use of AI and other emerging technology could also increase these risks. UnitedHealth Group Incorporated's acquisition risk factor also now says integration must be done comprehensively and expeditiously.",
       "audit_consideration": "Does the audit plan test how third-party providers' security capabilities and the integration of acquired systems are assessed and monitored?",
       "evidence": [
         {
@@ -85,6 +85,14 @@
           "report_date": "2025-12-28",
           "change": "changed",
           "quote": "Because of the frequently changing attack techniques, along with the increased volume and sophistication of the attacks and increasing use and reliance on third parties, there is the potential for the Company to be adversely impacted."
+        },
+        {
+          "ticker": "JNJ",
+          "accession": "0000200406-26-000016",
+          "item": "1A",
+          "report_date": "2025-12-28",
+          "change": "changed",
+          "quote": "The increasing use of AI and other emerging technology could also increase these risks."
         },
         {
           "ticker": "UNH",

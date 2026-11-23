@@ -1,6 +1,6 @@
-# Emerging risks for the audit plan
+# Risk-disclosure changes for the audit plan
 
-Compares Item 1A (Risk Factors) and Item 9A (Controls and Procedures) across consecutive Form 10-Ks for six sector peer pairs, then drafts a short list of emerging or growing risks a chief audit executive can use when building the audit plan.
+Compares Item 1A (Risk Factors) and Item 9A (Controls and Procedures) across consecutive Form 10-Ks for six sector peer pairs, then drafts a short list of risk-disclosure changes a chief audit executive can use when building the audit plan.
 
 The short list is a reading of what the filings added or expanded. Every quote in it has to appear, after whitespace normalization, in the stored Item 1A or Item 9A extract it cites, and in a stored year-over-year passage or Item 9A quote for that accession. If a quote does not match, the brief is not published. The passage-level diffs stay on the company pages, one click away from the overview.
 
@@ -81,7 +81,7 @@ PYTHONPATH=src python -m drift_detector run --config config/companies.yml --out 
 
 Until `briefs/drafts/` has a verified set, the overview and the sector pages say **Briefs not yet generated**. They do not invent themes.
 
-The extracts in `briefs/input/` and the pages in `docs/` were retrieved from EDGAR on 2026-11-13 03:32 UTC. No briefs have been drafted from them.
+The extracts in `briefs/input/` were retrieved from EDGAR on 2026-11-13 03:32 UTC. Verified drafts are in `briefs/drafts/` and are published into `docs/`.
 
 ## How a change is called
 

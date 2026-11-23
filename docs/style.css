@@ -128,6 +128,10 @@ footer {
 
 .theme { margin: 1.3rem 0 0.4rem; }
 
+.glossary { margin: 0.4rem 0 1rem; }
+.glossary dt { font-weight: 600; margin-top: 0.55rem; }
+.glossary dd { margin: 0.15rem 0 0.35rem; }
+
 .who, .audit {
   font-family: "Segoe UI", Helvetica, Arial, sans-serif;
   font-size: 0.98rem;

@@ -6,7 +6,7 @@
   "prompt_file": "sector_brief.md",
   "input_generated_at": "2026-11-13 03:32 UTC",
   "divergence": {
-    "text": "Apple Inc. added a stand-alone artificial intelligence risk factor that lists agentic systems, misuse by personnel, and sanctions among its exposures, while Microsoft Corporation added a stand-alone risk factor on the scale and financing of its cloud and AI investments. The two additions are framed differently, one around operational and legal conduct of AI and the other around capital commitments and revenue timing.",
+    "text": "Apple Inc. added a stand-alone artificial intelligence risk factor that lists agentic systems and misuse by personnel among its exposures, while Microsoft Corporation added a stand-alone risk factor on capital investment in AI models and on the scale of that spending. The two additions are framed differently, one around operational and legal conduct of AI and the other around capital commitments and revenue timing.",
     "evidence": [
       {
         "ticker": "AAPL",
@@ -22,6 +22,14 @@
         "item": "1A",
         "report_date": "2026-06-30",
         "change": "added",
+        "quote": "We have made and are continuing to make significant capital and operational investments to develop, train, deploy, and support AI models and related cloud-based services, including building and expanding datacenters, acquiring necessary components, and securing energy resources."
+      },
+      {
+        "ticker": "MSFT",
+        "accession": "0001193125-26-323660",
+        "item": "1A",
+        "report_date": "2026-06-30",
+        "change": "added",
         "quote": "These investments are being made at significant scale and on an accelerated timeline, require substantial and increasing capital expenditures and continued access to capital, and are in advance of fully developed revenue streams."
       }
     ]
@@ -29,8 +37,8 @@
   "themes": [
     {
       "title": "AI risk added as its own factor",
-      "what_changed": "The later Apple filing added a dedicated risk factor stating that AI technologies are integrated into its products and present emerging legal, regulatory, ethical and operational risks. It also names autonomous agents that may interact with systems they are not authorized to access.",
-      "audit_consideration": "Does the plan cover governance and testing of AI features and autonomous agents, including access boundaries to internal and external systems?",
+      "what_changed": "The later Apple filing added a dedicated risk factor stating that AI technologies are integrated into its products and present emerging legal, regulatory, ethical and operational risks. It lists unintended or unauthorized actions by autonomous or agentic systems and misuse by personnel.",
+      "audit_consideration": "Does the plan cover governance and testing of AI features and autonomous or agentic systems, including misuse by personnel?",
       "evidence": [
         {
           "ticker": "AAPL",
@@ -39,12 +47,20 @@
           "report_date": "2026-09-26",
           "change": "added",
           "quote": "Artificial intelligence technologies are increasingly integrated into the Company’s products and services and its business and operations. These technologies present emerging legal, regulatory, ethical and operational risks."
+        },
+        {
+          "ticker": "AAPL",
+          "accession": "0000320193-26-000026",
+          "item": "1A",
+          "report_date": "2026-09-26",
+          "change": "added",
+          "quote": "unintended or unauthorized actions by autonomous or agentic systems; misuse of artificial intelligence by employees and other personnel; changing public sentiment; bias and discrimination; and online safety and protection of minors."
         }
       ]
     },
     {
       "title": "AI infrastructure investment and financing",
-      "what_changed": "The later Microsoft filing added a risk factor tying its cloud and AI strategy to substantial capital spending, access to capital, and revenue that may not arrive on the expected timeline. Its supply language was also expanded to cover shortages of semiconductors, networking equipment, power systems and cooling equipment.",
+      "what_changed": "The later Microsoft filing added language on significant capital and operational investments to develop, train, deploy, and support AI models, made at significant scale ahead of fully developed revenue streams. Its supply language was also expanded to cover shortages of semiconductors, networking equipment, power systems and cooling equipment.",
       "audit_consideration": "Should the plan examine how capital commitments for datacenter capacity, components and energy are approved, tracked and reported against expected returns?",
       "evidence": [
         {
@@ -53,7 +69,15 @@
           "item": "1A",
           "report_date": "2026-06-30",
           "change": "added",
-          "quote": "Our ability to fund these investments depends on our ability to generate sufficient cash flows and obtain financing on acceptable terms."
+          "quote": "We have made and are continuing to make significant capital and operational investments to develop, train, deploy, and support AI models and related cloud-based services, including building and expanding datacenters, acquiring necessary components, and securing energy resources."
+        },
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "added",
+          "quote": "These investments are being made at significant scale and on an accelerated timeline, require substantial and increasing capital expenditures and continued access to capital, and are in advance of fully developed revenue streams."
         },
         {
           "ticker": "MSFT",
@@ -83,7 +107,7 @@
     {
       "title": "AI-driven cybersecurity threats",
       "what_changed": "Both later filings expanded their security risk language to reference AI. Apple states that AI significantly increases cybersecurity attack risks, and Microsoft adds AI-assisted social engineering and extends the targets to suppliers.",
-      "audit_consideration": "Does the plan assess third-party and supplier access to confidential data and the detection of AI-enabled phishing and similar attacks?",
+      "audit_consideration": "Does the plan assess detection of cybersecurity attacks the filings tie to artificial intelligence, including AI-assisted attempts to obtain sensitive information?",
       "evidence": [
         {
           "ticker": "AAPL",

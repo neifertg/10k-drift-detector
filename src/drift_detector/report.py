@@ -472,10 +472,11 @@ def index_page(
     by_ticker = {company.ticker: company for company in companies}
     parts = [
         '<div class="brief">',
-        "<h1>Emerging risks for the audit plan</h1>",
+        "<h1>Risk-disclosure changes for the audit plan</h1>",
         "<p>Year-over-year changes in Item 1A (Risk Factors) and Item 9A (Controls and Procedures) "
-        "for the six peer pairs. The themes are the cross-sector risks. Under Sectors, each pair has "
-        "the one or two changes to consider for that audit plan. Each company page is the passage-level evidence.</p>",
+        "for the six peer pairs. The themes are the cross-sector changes. Under Sectors, each pair has "
+        "the one or two changes to consider for that audit plan. A takeaway may rest on one company's filing. "
+        "Each company page is the passage-level evidence.</p>",
         "<p>A theme is a reading of what the filings added or expanded. It is shown only when every supporting quote "
         "is in the stored extract it cites. It is not a risk rating, not a conclusion that a control failed, "
         "and not investment advice.</p>",
@@ -529,14 +530,14 @@ def index_page(
         '<a href="https://www.sec.gov/os/accessing-edgar-data">SEC fair-access guidance</a>. '
         "This is a wording comparison of public filings. It is not investment advice.</p></footer>"
     )
-    return _page("Emerging risks for the audit plan", "\n".join(parts), 0)
+    return _page("Risk-disclosure changes for the audit plan", "\n".join(parts), 0)
 
 
 def _missing_notice() -> str:
     return (
         '<section class="notice">'
         "<h2>Briefs not yet generated</h2>"
-        "<p>The overview and the sector pages will list emerging or growing risks here after drafts "
+        "<p>The overview and the sector pages will list risk-disclosure changes here after drafts "
         "are written from the extracted changes and every quote has been checked against the stored filing extract. "
         "Nothing on this page is filled in ahead of that check.</p>"
         '<p class="src">From a checkout: <code>python -m drift_detector draft-briefs --input briefs/input --out briefs/drafts</code>, '
@@ -579,7 +580,7 @@ def _sector_status(brief, brief_errors: list[str] | None, *, depth: int, glossar
         parts.append(f"<p>{words.prose(brief.divergence)}</p>")
         parts.append(_evidence_details(brief.divergence_evidence, depth))
     if brief.themes:
-        parts.append("<h2>Emerging or growing risks</h2>")
+        parts.append("<h2>Added or reworded risk language</h2>")
         parts.append(_theme_list(brief.themes, {}, depth=depth, glossary=words))
     elif not brief.divergence:
         parts.append("<p>The verified draft has no theme and no divergence note.</p>")
@@ -644,6 +645,8 @@ def plain_change(change: str) -> str:
         "changed": "Reworded",
         "unclassified": "Reworded",
         "already_paired": "Reworded",
+        "reworded": "Reworded",
+        "moved": "Reworded",
         "9a": "Controls language",
     }.get(change, "Reworded")
 
@@ -696,6 +699,21 @@ def _methodology(peers: list[PeerResult] | None = None) -> str:
 <li>The short list is drafted from the extracted changes. It is published only after each quote is found, after whitespace normalization, in the cited Item 1A or Item 9A extract, and in a stored passage or Item 9A quote for that accession. The audit-plan line is a consideration, not a finding.</li>
 <li>This is a wording comparison of public filings. It is not investment advice.</li>
 </ul>
+<h2>Glossary</h2>
+<dl class="glossary">
+<dt>PSO</dt>
+<dd>Payment system operator. Mastercard uses the term for a payment network in its Brazil regulation sentence.</dd>
+<dt>G-SIB surcharge</dt>
+<dd>An extra capital buffer for a global systemically important bank. The first “G-SIB” in the brief is written out.</dd>
+<dt>accession</dt>
+<dd>The SEC accession number that identifies one filing. Each quote names the accession it was taken from.</dd>
+<dt>10-K/A</dt>
+<dd>An amended Form 10-K. Amendments are named and are not diffed.</dd>
+<dt>Item 8</dt>
+<dd>Financial statements and supplementary data. This report quotes a pointer to Item 8 and does not open it.</dd>
+<dt>agentic</dt>
+<dd>The filings’ word for an AI system that can take actions, including an autonomous or agentic system.</dd>
+</dl>
 """
 
 

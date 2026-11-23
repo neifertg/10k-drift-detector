@@ -6,7 +6,7 @@
   "prompt_file": "sector_brief.md",
   "input_generated_at": "2026-11-13 03:32 UTC",
   "divergence": {
-    "text": "Chevron added stand-alone risk factors for its use of artificial intelligence and for its subsidiary's role as general partner of Hess Midstream LP, while Exxon Mobil's changes are rewrites and expansions of existing risk language. Exxon Mobil's later filing broadened its existing supply, demand, legal and technology risks (for example adding new demand drivers such as AI data centers and new supply-side factors such as access to previously unavailable resources), whereas Chevron's later filing added no comparable new supply-side language in the passages shown.",
+    "text": "Chevron added stand-alone risk factors for its use of artificial intelligence and for its subsidiary's role as general partner of Hess Midstream LP. Exxon Mobil's later filing rewrote existing supply language to include new or emerging factors that could increase global oil, gas, and petrochemical supply, such as government policies intended to expand development of reserves.",
     "evidence": [
       {
         "ticker": "CVX",
@@ -15,6 +15,14 @@
         "report_date": "2025-12-31",
         "change": "added",
         "quote": "One of our subsidiaries acts as the general partner of Hess Midstream, a publicly traded limited partnership. Our control of the general partner of Hess Midstream may increase the possibility that we could be subject to claims of breach of duties owed to Hess Midstream, including claims of conflict of interest."
+      },
+      {
+        "ticker": "CVX",
+        "accession": "0000093410-26-000078",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "added",
+        "quote": "The company is increasingly utilizing artificial intelligence (“AI”) technologies in certain of its processes, information systems and various operations, and expects that AI will assume a more critical role in its operations over time. The use of AI technologies introduces certain risks to the company, including potential dependency on biased or incorrect AI outputs, new or enhanced regulatory requirements, litigation, privacy risks, cybersecurity risks, reputational harm, liability or other adverse consequences, any of which could adversely affect its business, financial condition and results of operations."
       },
       {
         "ticker": "XOM",
@@ -29,7 +37,7 @@
   "themes": [
     {
       "title": "Artificial intelligence exposure",
-      "what_changed": "Chevron's later filing added a new risk factor stating that the company is increasingly using AI in its processes and expects AI to take a more critical role in operations. Exxon Mobil's later filing also added AI references, naming AI data center demand as a demand factor and AI as a technology the company must adopt.",
+      "what_changed": "Chevron's later filing added a risk factor stating that the company is increasingly using AI in its processes and expects AI to take a more critical role in operations. Exxon Mobil's later filing says technology or AI may enhance the competitiveness of firms that may not have ExxonMobil's internal resources.",
       "audit_consideration": "Does the audit plan cover how AI tools used in operations and information systems are inventoried, governed, and monitored for output errors, privacy, and cybersecurity exposure, including tools run by third-party providers?",
       "evidence": [
         {
@@ -38,7 +46,7 @@
           "item": "1A",
           "report_date": "2025-12-31",
           "change": "added",
-          "quote": "The use of AI technologies introduces certain risks to the company, including potential dependency on biased or incorrect AI outputs, new or enhanced regulatory requirements, litigation, privacy risks, cybersecurity risks, reputational harm, liability or other adverse consequences"
+          "quote": "The company is increasingly utilizing artificial intelligence (“AI”) technologies in certain of its processes, information systems and various operations, and expects that AI will assume a more critical role in its operations over time. The use of AI technologies introduces certain risks to the company, including potential dependency on biased or incorrect AI outputs, new or enhanced regulatory requirements, litigation, privacy risks, cybersecurity risks, reputational harm, liability or other adverse consequences, any of which could adversely affect its business, financial condition and results of operations."
         },
         {
           "ticker": "XOM",
@@ -46,7 +54,7 @@
           "item": "1A",
           "report_date": "2025-12-31",
           "change": "changed",
-          "quote": "increased demand for artificial intelligence (AI), including the construction and expansion of AI data centers"
+          "quote": "Technology and expertise provided by industry service companies or AI may also enhance the competitiveness of firms that may not have the internal resources and capabilities of ExxonMobil or reduce the need for resource-owning countries to partner with private-sector oil and gas companies in order to monetize national resources."
         }
       ]
     },
@@ -75,8 +83,8 @@
     },
     {
       "title": "Geopolitical, legal and access risk",
-      "what_changed": "Exxon Mobil's later filing widened its security, legal-certainty and access language to cover military conflict, regime changes, and opposition from well-funded outside groups. Chevron's later filing added a reference to current geopolitical tensions in Venezuela and broadened its description of government obligations and windfall taxes.",
-      "audit_consideration": "Does the plan test how management identifies and escalates country-level political, sanctions, and tax-change developments that could affect operations and tax positions?",
+      "what_changed": "Exxon Mobil's later filing says some countries where it does or seeks to do business may be subject to regime changes and lack political or governmental stability. Chevron's later filing refers to current geopolitical tensions in Venezuela.",
+      "audit_consideration": "Does the plan test how management identifies and escalates country-level political developments that could affect operations?",
       "evidence": [
         {
           "ticker": "XOM",

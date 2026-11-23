@@ -27,7 +27,11 @@ def test_verified_fixture_renders_the_overview_and_the_sector_brief(tmp_path):
     sector = (tmp_path / "docs" / "peers" / "example.html").read_text()
     company = (tmp_path / "docs" / "company" / "aaa.html").read_text()
     body, _, method = index.partition("<details><summary>How a passage")
-    assert "Emerging risks for the audit plan" in index
+    assert "Risk-disclosure changes for the audit plan" in index
+    method_start = index.find("<h2>Glossary</h2>")
+    assert method_start > index.find("How a passage")
+    for term in ("PSO", "G-SIB surcharge", "accession", "10-K/A", "Item 8", "agentic"):
+        assert term in index[method_start:]
     assert "Artificial intelligence" in body
     assert "Tariffs on imported merchandise" in body
     assert ALPHA_ADDED in index
@@ -84,6 +88,8 @@ def test_plain_change_hides_the_matcher_label():
     assert plain_change("unclassified") == "Reworded"
     assert plain_change("already_paired") == "Reworded"
     assert plain_change("added") == "Added"
+    assert plain_change("reworded") == "Reworded"
+    assert plain_change("moved") == "Reworded"
     assert "unclassified" not in plain_change("unclassified")
 
 
