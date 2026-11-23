@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "kind": "sector",
+  "sector": "Energy",
+  "model": "claude-sonnet-5-5",
+  "prompt_file": "sector_brief.md",
+  "input_generated_at": "2026-11-13 03:32 UTC",
+  "divergence": {
+    "text": "Chevron added stand-alone risk factors for its use of artificial intelligence and for its subsidiary's role as general partner of Hess Midstream LP. Exxon Mobil's later filing rewrote existing supply language to include new or emerging factors that could increase global oil, gas, and petrochemical supply, such as government policies intended to expand development of reserves.",
+    "evidence": [
+      {
+        "ticker": "CVX",
+        "accession": "0000093410-26-000078",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "added",
+        "quote": "One of our subsidiaries acts as the general partner of Hess Midstream, a publicly traded limited partnership. Our control of the general partner of Hess Midstream may increase the possibility that we could be subject to claims of breach of duties owed to Hess Midstream, including claims of conflict of interest."
+      },
+      {
+        "ticker": "CVX",
+        "accession": "0000093410-26-000078",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "added",
+        "quote": "The company is increasingly utilizing artificial intelligence (“AI”) technologies in certain of its processes, information systems and various operations, and expects that AI will assume a more critical role in its operations over time. The use of AI technologies introduces certain risks to the company, including potential dependency on biased or incorrect AI outputs, new or enhanced regulatory requirements, litigation, privacy risks, cybersecurity risks, reputational harm, liability or other adverse consequences, any of which could adversely affect its business, financial condition and results of operations."
+      },
+      {
+        "ticker": "XOM",
+        "accession": "0000034088-26-000045",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "changed",
+        "quote": "There also may be new or emerging factors that could increase global oil, gas, and petrochemical supply levels in the short or long term, such as government policies and actions intended to boost or expand development of domestic or foreign oil and gas reserves or accelerate the pace of production reaching markets"
+      }
+    ]
+  },
+  "themes": [
+    {
+      "title": "Artificial intelligence exposure",
+      "what_changed": "Chevron's later filing added a risk factor stating that the company is increasingly using AI in its processes and expects AI to take a more critical role in operations. Exxon Mobil's later filing says technology or AI may enhance the competitiveness of firms that may not have ExxonMobil's internal resources.",
+      "audit_consideration": "Does the audit plan cover how AI tools used in operations and information systems are inventoried, governed, and monitored for output errors, privacy, and cybersecurity exposure, including tools run by third-party providers?",
+      "evidence": [
+        {
+          "ticker": "CVX",
+          "accession": "0000093410-26-000078",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "The company is increasingly utilizing artificial intelligence (“AI”) technologies in certain of its processes, information systems and various operations, and expects that AI will assume a more critical role in its operations over time. The use of AI technologies introduces certain risks to the company, including potential dependency on biased or incorrect AI outputs, new or enhanced regulatory requirements, litigation, privacy risks, cybersecurity risks, reputational harm, liability or other adverse consequences, any of which could adversely affect its business, financial condition and results of operations."
+        },
+        {
+          "ticker": "XOM",
+          "accession": "0000034088-26-000045",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "Technology and expertise provided by industry service companies or AI may also enhance the competitiveness of firms that may not have the internal resources and capabilities of ExxonMobil or reduce the need for resource-owning countries to partner with private-sector oil and gas companies in order to monetize national resources."
+        }
+      ]
+    },
+    {
+      "title": "Post-acquisition integration and affiliate liability",
+      "what_changed": "Chevron's later filing rewrote its Hess acquisition risk to say the deal closed and that benefits such as run-rate cost synergies and growth rates must now be realized. It also added a new risk about legal claims tied to its role as general partner of Hess Midstream.",
+      "audit_consideration": "Does the plan include a look at how integration synergy targets are tracked and reported, and how conflict-of-interest obligations toward a publicly traded partnership are monitored?",
+      "evidence": [
+        {
+          "ticker": "CVX",
+          "accession": "0000093410-26-000078",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "The success of the acquisition of Hess, which closed in July 2025, will depend, in part, on Chevron’s ability to realize the anticipated benefits, including the anticipated run-rate cost synergies, estimated five-year production and free cash flow growth rates, and anticipated higher returns to shareholders over the long-term."
+        },
+        {
+          "ticker": "CVX",
+          "accession": "0000093410-26-000078",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "Any liability resulting from such claims could have an adverse impact on our future business, financial condition, results of operations and cash flows."
+        }
+      ]
+    },
+    {
+      "title": "Geopolitical, legal and access risk",
+      "what_changed": "Exxon Mobil's later filing says some countries where it does or seeks to do business may be subject to regime changes and lack political or governmental stability. Chevron's later filing refers to current geopolitical tensions in Venezuela.",
+      "audit_consideration": "Does the plan test how management identifies and escalates country-level political developments that could affect operations?",
+      "evidence": [
+        {
+          "ticker": "XOM",
+          "accession": "0000034088-26-000045",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "Some countries in which we do, or seek to do, business lack well-developed legal systems, lack political or governmental stability, may be subject to regime changes"
+        },
+        {
+          "ticker": "CVX",
+          "accession": "0000093410-26-000078",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "political events such as current geopolitical tensions in Venezuela"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "kind": "sector",
+  "sector": "Healthcare",
+  "model": "claude-sonnet-5-5",
+  "prompt_file": "sector_brief.md",
+  "input_generated_at": "2026-11-13 03:32 UTC",
+  "divergence": {
+    "text": "UnitedHealth Group Incorporated added a stand-alone risk factor on its increasing use of AI, while Johnson & Johnson added a new group of risk factors on the planned separation of its Orthopaedics business. The two companies' latest additions do not overlap in subject.",
+    "evidence": [
+      {
+        "ticker": "UNH",
+        "accession": "0000731766-26-000062",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "added",
+        "quote": "Our increasing use of AI presents legal, regulatory and business risks to our operations, reputation and financial results."
+      },
+      {
+        "ticker": "JNJ",
+        "accession": "0000200406-26-000016",
+        "item": "1A",
+        "report_date": "2025-12-28",
+        "change": "added",
+        "quote": "In October 2025, the Company announced its intention to separate the Company's Orthopaedics business."
+      }
+    ]
+  },
+  "themes": [
+    {
+      "title": "AI use and AI-related regulation",
+      "what_changed": "UnitedHealth Group Incorporated added a dedicated risk factor stating that an AI system could produce inaccurate, incomplete or biased output that affects operations and customer service. Its regulatory discussion was also rewritten to say that AI technologies are subject to evolving and uncertain laws and regulations.",
+      "audit_consideration": "Does the audit plan cover how AI systems used in operations and customer-facing products are inventoried, monitored for inaccurate or biased output, and tracked against changing AI laws?",
+      "evidence": [
+        {
+          "ticker": "UNH",
+          "accession": "0000731766-26-000062",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "However, to the extent an AI system does not operate as intended or produces an inaccurate, incomplete or biased output, the system could impact operations, customer service or other functions and could have an adverse effect on our business, reputation, results of operations, financial position and cash flows."
+        },
+        {
+          "ticker": "UNH",
+          "accession": "0000731766-26-000062",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "AI technologies are subject to evolving and uncertain U.S. federal, state, and international laws and regulations."
+        }
+      ]
+    },
+    {
+      "title": "Planned business separation",
+      "what_changed": "Johnson & Johnson added risk factors about the planned separation of its Orthopaedics business. The text says the company will incur significant expenses and that anticipated benefits rest on assumptions that may prove incorrect.",
+      "audit_consideration": "Does the audit plan address separation-related cost tracking, governance over the transaction conditions, and the control implications of carving out a business?",
+      "evidence": [
+        {
+          "ticker": "JNJ",
+          "accession": "0000200406-26-000016",
+          "item": "1A",
+          "report_date": "2025-12-28",
+          "change": "added",
+          "quote": "The Company will incur significant expenses in connection with the planned separation."
+        },
+        {
+          "ticker": "JNJ",
+          "accession": "0000200406-26-000016",
+          "item": "1A",
+          "report_date": "2025-12-28",
+          "change": "added",
+          "quote": "The anticipated benefits of the planned separation are based on a number of assumptions, some of which may prove incorrect."
+        }
+      ]
+    },
+    {
+      "title": "Third-party reliance and cybersecurity",
+      "what_changed": "Johnson & Johnson's later filing added increasing use of and reliance on third parties as a factor behind its information security risk, and says the increasing use of AI and other emerging technology could also increase these risks. UnitedHealth Group Incorporated's acquisition risk factor also now says integration must be done comprehensively and expeditiously.",
+      "audit_consideration": "Does the audit plan test how third-party providers' security capabilities and the integration of acquired systems are assessed and monitored?",
+      "evidence": [
+        {
+          "ticker": "JNJ",
+          "accession": "0000200406-26-000016",
+          "item": "1A",
+          "report_date": "2025-12-28",
+          "change": "changed",
+          "quote": "Because of the frequently changing attack techniques, along with the increased volume and sophistication of the attacks and increasing use and reliance on third parties, there is the potential for the Company to be adversely impacted."
+        },
+        {
+          "ticker": "JNJ",
+          "accession": "0000200406-26-000016",
+          "item": "1A",
+          "report_date": "2025-12-28",
+          "change": "changed",
+          "quote": "The increasing use of AI and other emerging technology could also increase these risks."
+        },
+        {
+          "ticker": "UNH",
+          "accession": "0000731766-26-000062",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "Successful acquisitions also require us to effectively, comprehensively and expeditiously integrate the acquired business into our existing operations, including our internal control environment and culture"
+        }
+      ]
+    }
+  ]
+}

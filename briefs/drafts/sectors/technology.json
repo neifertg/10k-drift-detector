@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "kind": "sector",
+  "sector": "Technology",
+  "model": "claude-sonnet-5-5",
+  "prompt_file": "sector_brief.md",
+  "input_generated_at": "2026-11-13 03:32 UTC",
+  "divergence": {
+    "text": "Apple Inc. added a stand-alone artificial intelligence risk factor that lists agentic systems and misuse by personnel among its exposures, while Microsoft Corporation added a stand-alone risk factor on capital investment in AI models and on the scale of that spending. The two additions are framed differently, one around operational and legal conduct of AI and the other around capital commitments and revenue timing.",
+    "evidence": [
+      {
+        "ticker": "AAPL",
+        "accession": "0000320193-26-000026",
+        "item": "1A",
+        "report_date": "2026-09-26",
+        "change": "added",
+        "quote": "unintended or unauthorized actions by autonomous or agentic systems; misuse of artificial intelligence by employees and other personnel; changing public sentiment; bias and discrimination; and online safety and protection of minors."
+      },
+      {
+        "ticker": "MSFT",
+        "accession": "0001193125-26-323660",
+        "item": "1A",
+        "report_date": "2026-06-30",
+        "change": "added",
+        "quote": "We have made and are continuing to make significant capital and operational investments to develop, train, deploy, and support AI models and related cloud-based services, including building and expanding datacenters, acquiring necessary components, and securing energy resources."
+      },
+      {
+        "ticker": "MSFT",
+        "accession": "0001193125-26-323660",
+        "item": "1A",
+        "report_date": "2026-06-30",
+        "change": "added",
+        "quote": "These investments are being made at significant scale and on an accelerated timeline, require substantial and increasing capital expenditures and continued access to capital, and are in advance of fully developed revenue streams."
+      }
+    ]
+  },
+  "themes": [
+    {
+      "title": "AI risk added as its own factor",
+      "what_changed": "The later Apple filing added a dedicated risk factor stating that AI technologies are integrated into its products and present emerging legal, regulatory, ethical and operational risks. It lists unintended or unauthorized actions by autonomous or agentic systems and misuse by personnel.",
+      "audit_consideration": "Does the plan cover governance and testing of AI features and autonomous or agentic systems, including misuse by personnel?",
+      "evidence": [
+        {
+          "ticker": "AAPL",
+          "accession": "0000320193-26-000026",
+          "item": "1A",
+          "report_date": "2026-09-26",
+          "change": "added",
+          "quote": "Artificial intelligence technologies are increasingly integrated into the Company’s products and services and its business and operations. These technologies present emerging legal, regulatory, ethical and operational risks."
+        },
+        {
+          "ticker": "AAPL",
+          "accession": "0000320193-26-000026",
+          "item": "1A",
+          "report_date": "2026-09-26",
+          "change": "added",
+          "quote": "unintended or unauthorized actions by autonomous or agentic systems; misuse of artificial intelligence by employees and other personnel; changing public sentiment; bias and discrimination; and online safety and protection of minors."
+        }
+      ]
+    },
+    {
+      "title": "AI infrastructure investment and financing",
+      "what_changed": "The later Microsoft filing added language on significant capital and operational investments to develop, train, deploy, and support AI models, made at significant scale ahead of fully developed revenue streams. Its supply language was also expanded to cover shortages of semiconductors, networking equipment, power systems and cooling equipment.",
+      "audit_consideration": "Should the plan examine how capital commitments for datacenter capacity, components and energy are approved, tracked and reported against expected returns?",
+      "evidence": [
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "added",
+          "quote": "We have made and are continuing to make significant capital and operational investments to develop, train, deploy, and support AI models and related cloud-based services, including building and expanding datacenters, acquiring necessary components, and securing energy resources."
+        },
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "added",
+          "quote": "These investments are being made at significant scale and on an accelerated timeline, require substantial and increasing capital expenditures and continued access to capital, and are in advance of fully developed revenue streams."
+        },
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "unclassified",
+          "quote": "We have experienced and may continue to experience supply constraints, including shortages of semiconductors, networking equipment, power systems, cooling equipment, and other key components."
+        }
+      ]
+    },
+    {
+      "title": "Component supply and cost pressure",
+      "what_changed": "Apple's later filing says it is experiencing supply constraints and rising costs for advanced semiconductors, memory and storage, and expects the trend to intensify for memory and storage. The prior-year wording described such shortages as past events that could occur again.",
+      "audit_consideration": "Does the plan test how supply constraints and component cost increases flow into inventory valuation and purchase commitment reporting?",
+      "evidence": [
+        {
+          "ticker": "AAPL",
+          "accession": "0000320193-26-000026",
+          "item": "1A",
+          "report_date": "2026-09-26",
+          "change": "unclassified",
+          "quote": "For example, the Company is experiencing supply constraints and rising costs driven by industry-wide supply-demand imbalances for key components, including advanced semiconductors, memory and storage."
+        }
+      ]
+    },
+    {
+      "title": "AI-driven cybersecurity threats",
+      "what_changed": "Apple's later filing says the spread of AI significantly increases cybersecurity attack risks. Microsoft added AI-assisted techniques to its social-engineering language and extended the list of targets to suppliers.",
+      "audit_consideration": "Does the plan assess detection of cybersecurity attacks the filings tie to artificial intelligence, including AI-assisted attempts to obtain sensitive information?",
+      "evidence": [
+        {
+          "ticker": "AAPL",
+          "accession": "0000320193-26-000026",
+          "item": "1A",
+          "report_date": "2026-09-26",
+          "change": "changed",
+          "quote": "The rapid advancement and widespread dissemination of artificial intelligence technologies significantly increases the risks associated with cybersecurity attacks."
+        },
+        {
+          "ticker": "MSFT",
+          "accession": "0001193125-26-323660",
+          "item": "1A",
+          "report_date": "2026-06-30",
+          "change": "changed",
+          "quote": "using social engineering and AI-assisted techniques to induce our employees, users, partners, suppliers, or customers to disclose sensitive information"
+        }
+      ]
+    }
+  ]
+}

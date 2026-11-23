@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "kind": "sector",
+  "sector": "Banking",
+  "model": "claude-sonnet-5-5",
+  "prompt_file": "sector_brief.md",
+  "input_generated_at": "2026-11-13 03:32 UTC",
+  "divergence": {
+    "text": "JPMorgan Chase & Co. added a risk factor on advanced technologies such as AI and moved an existing interconnectivity sentence under a new interconnectedness heading. Bank of America Corporation's later filing adds a sentence on nation-state cyberattacks that use emerging technologies such as AI and that threaten its third parties' operations.",
+    "evidence": [
+      {
+        "ticker": "JPM",
+        "accession": "0001628280-26-008131",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "added",
+        "quote": "JPMorganChase’s operations, results, and competitive standing could be adversely affected by the development of advanced technologies such as AI."
+      },
+      {
+        "ticker": "JPM",
+        "accession": "0001628280-26-008131",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "moved",
+        "quote": "JPMorganChase’s interconnectivity with clients, customers and other external parties continues to expand, which increases the risk of failure or cyber attacks with respect to the systems of those parties."
+      },
+      {
+        "ticker": "BAC",
+        "accession": "0000070858-26-000157",
+        "item": "1A",
+        "report_date": "2025-12-31",
+        "change": "changed",
+        "quote": "Also, the use of cyberattacks or campaigns, cyberespionage or other unauthorized access to networks and systems by nation states or their proxies, including utilizing emerging technologies such as AI, has increased and threatens our and our third parties’ operations and information systems, and the financial systems and infrastructure upon which we rely."
+      }
+    ]
+  },
+  "themes": [
+    {
+      "title": "AI and emerging technology",
+      "what_changed": "JPMorgan Chase & Co.'s later filing added a risk factor stating that the rapid development of advanced technologies, including generative and agentic AI systems, presents risks to its businesses and operations. Bank of America Corporation's strategy risk factor now refers to the nonbank digital asset ecosystem, including nonbank stablecoins.",
+      "audit_consideration": "Is there an inventory of AI and digital-asset uses, with defined controls over testing, data access and model oversight, that the audit plan can map to these disclosed exposures?",
+      "evidence": [
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "added",
+          "quote": "The rapid development and deployment of advanced technologies, including generative and agentic AI systems, present a range of risks to JPMorganChase’s businesses and operations"
+        },
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "including the further development of the nonbank digital asset ecosystem (e.g., related to nonbank stablecoins or digital asset trading)"
+        }
+      ]
+    },
+    {
+      "title": "Third-party and interconnected operational risk",
+      "what_changed": "JPMorgan Chase & Co. moved an existing sentence on interconnectivity with clients and external parties under a new heading, including the risk of failure or cyber attacks on those parties' systems. Bank of America Corporation's later filing adds a sentence on nation-state cyberattacks that use emerging technologies such as AI and that threaten its third parties' operations.",
+      "audit_consideration": "Does the plan test how the bank monitors and responds to failures or attacks at customers, vendors and market infrastructures that sit outside its own security perimeter?",
+      "evidence": [
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "moved",
+          "quote": "JPMorganChase’s interconnectivity with clients, customers and other external parties continues to expand, which increases the risk of failure or cyber attacks with respect to the systems of those parties."
+        },
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "Also, the use of cyberattacks or campaigns, cyberespionage or other unauthorized access to networks and systems by nation states or their proxies, including utilizing emerging technologies such as AI, has increased and threatens our and our third parties’ operations and information systems, and the financial systems and infrastructure upon which we rely."
+        }
+      ]
+    },
+    {
+      "title": "Executive branch actions and regulatory scope",
+      "what_changed": "Bank of America Corporation's later filing now refers to Executive Branch Actions alongside laws, rules and regulations. JPMorgan Chase & Co. likewise added executive branch actions to its summary of legal and regulatory risks.",
+      "audit_consideration": "How does the compliance change-management process capture and assess executive-branch directives that are not formal rulemaking?",
+      "evidence": [
+        {
+          "ticker": "BAC",
+          "accession": "0000070858-26-000157",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "We operate in a highly regulated industry and are subject to evolving and comprehensive federal, state and foreign LRRs and Executive Branch Actions."
+        },
+        {
+          "ticker": "JPM",
+          "accession": "0001628280-26-008131",
+          "item": "1A",
+          "report_date": "2025-12-31",
+          "change": "changed",
+          "quote": "as well as changes to or in the application, interpretation or enforcement of applicable law or executive branch actions"
+        }
+      ]
+    }
+  ]
+}
