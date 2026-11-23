@@ -106,7 +106,7 @@
     },
     {
       "title": "AI-driven cybersecurity threats",
-      "what_changed": "Both later filings expanded their security risk language to reference AI. Apple states that AI significantly increases cybersecurity attack risks, and Microsoft adds AI-assisted social engineering and extends the targets to suppliers.",
+      "what_changed": "Apple's later filing says the spread of AI significantly increases cybersecurity attack risks. Microsoft added AI-assisted techniques to its social-engineering language and extended the list of targets to suppliers.",
       "audit_consideration": "Does the plan assess detection of cybersecurity attacks the filings tie to artificial intelligence, including AI-assisted attempts to obtain sensitive information?",
       "evidence": [
         {

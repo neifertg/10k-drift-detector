@@ -477,8 +477,9 @@ def index_page(
         "for the six peer pairs. The themes are the cross-sector changes. Under Sectors, each pair has "
         "the one or two changes to consider for that audit plan. A takeaway may rest on one company's filing. "
         "Each company page is the passage-level evidence.</p>",
-        "<p>A theme is a reading of what the filings added or expanded. It is shown only when every supporting quote "
-        "is in the stored extract it cites. It is not a risk rating, not a conclusion that a control failed, "
+        "<p>A theme is a reading of what the filings added or expanded. The briefs are published only when every quote "
+        "in the whole set matches the stored extract it cites; a single mismatch leaves the themes off the page. "
+        "It is not a risk rating, not a conclusion that a control failed, "
         "and not investment advice.</p>",
         f'<p class="src">Filing extracts retrieved {e(generated_at)} from SEC EDGAR. '
         "Three latest 10-Ks per company where EDGAR has them. "
@@ -699,6 +700,7 @@ def _methodology(peers: list[PeerResult] | None = None) -> str:
 <li>The short list is drafted from the extracted changes. It is published only after each quote is found, after whitespace normalization, in the cited Item 1A or Item 9A extract, and in a stored passage or Item 9A quote for that accession. The audit-plan line is a consideration, not a finding.</li>
 <li>This is a wording comparison of public filings. It is not investment advice.</li>
 </ul>
+<p>Tariff language appears in several filings but was left out of the cross-sector themes; it is covered only under Retail.</p>
 <h2>Glossary</h2>
 <dl class="glossary">
 <dt>PSO</dt>
